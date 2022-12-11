@@ -28,7 +28,8 @@ set(inc
   device.h
 )
 
-set(srcs
+# core source files, sources between all ports
+set(common_srcs
 
   metrics.cpp ac.cpp dc.cpp driver.cpp
   
@@ -38,18 +39,29 @@ set(srcs
   
   vector.cpp
   
-  driver/hmm.cpp driver/crm.cpp
+  driver/hmm.cpp
 
   surface.cpp device.cpp
-
-  support/gl/array_ptr.cpp support/gl/buffer_ptr.cpp support/gl/index_ptr.cpp
-  support/gl/texture_ptr.cpp support/gl/shader_ptr.cpp support/gl/program_ptr.cpp
-  support/gl_render_base.cpp
 
   gfx.cpp
 )
 
-set(libs host ${HOST_LIBS})
+set(common_libs host ${HOST_LIBS})
+
+message("GFX SYSTEM NAME: \"${OS}\"")
+
+# system specific sources and libraries
+set(system_srcs)
+set(system_libs)
+if("${OS}" MATCHES "Linux")
+  set(system_srcs
+      driver/crm.cpp
+      support/gl/array_ptr.cpp support/gl/buffer_ptr.cpp support/gl/index_ptr.cpp
+      support/gl/texture_ptr.cpp support/gl/shader_ptr.cpp support/gl/program_ptr.cpp
+      support/gl_render_base.cpp    
+  )
+  set(system_libs)
+endif()
 
 add_subdirectory(assets)
 add_subdirectory(driver)
@@ -59,9 +71,9 @@ add_subdirectory(tile)
 add_subdirectory(vector)
 add_subdirectory(support)
 
-add_library(${NAME} STATIC ${srcs})
+add_library(${NAME} STATIC ${common_srcs} ${system_srcs})
 set_target_properties(${NAME} PROPERTIES PREFIX "${PREFIX}")
-target_link_libraries(${NAME} ${libs})
+target_link_libraries(${NAME} ${common_libs} ${system_libs})
 
 if(SDK)
   file(MAKE_DIRECTORY ${GFX_SDK_DIR})
