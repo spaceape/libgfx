@@ -22,19 +22,19 @@
 #include "dc.h"
 #include "config.h"
 #include "device.h"
-#include "driver/crm.h"
+#include "driver/com.h"
 
-      gfx::device*        g_display_ptr;
+      gfx::device*              gfx_display_ptr;
+      gfx::surface*             gfx_surface_ptr;
+      gfx::dc::mapping_base_t*  gfx_mapping_ptr;
 
 namespace gfx {
 
-      surface*            dc::gfx_surface_ptr;
-      dc::mapping_base_t* dc::gfx_mapping_ptr;
-
-      bool(*dc::gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept = crm::cmo_load_preset;
-      bool(*dc::gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept = crm::cmo_load_resource;
-      bool(*dc::gfx_cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept = crm::cso_load_resource;
-      bool(*dc::gfx_pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept = crm::pbo_load_resource;
+      bool(*dc::gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept = com::cmo_load_preset;
+      bool(*dc::gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept = com::cmo_load_resource;
+      bool(*dc::gfx_cso_load_ptr)(cso&, std::uint8_t*, unsigned int, int, int) noexcept = com::cso_load_ptr;
+      bool(*dc::gfx_cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept = com::cso_load_resource;
+      bool(*dc::gfx_pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept = com::pbo_load_resource;
 
       dc::dc() noexcept
 {
@@ -66,7 +66,7 @@ bool  dc::gfx_set_format(unsigned int format, int cc, int glyph_sx, int glyph_sy
           return false;
       }
       if(gfx_surface_ptr->is_mapped()) {
-          g_display_ptr->gdr_reset_mapping_format(gfx_surface_ptr, gfx_mapping_ptr, format, cc, glyph_sx, glyph_sy);
+          gfx_display_ptr->gdr_reset_mapping_format(gfx_surface_ptr, gfx_mapping_ptr, format, cc, glyph_sx, glyph_sy);
           return true;
       }
       gfx_mapping_ptr->format = format;
@@ -86,7 +86,7 @@ bool  dc::gfx_set_format(unsigned int format, int cc, int glyph_sx, int glyph_sy
 void  dc::gfx_set_option_flags(unsigned int flags) noexcept
 {
       if(gfx_surface_ptr->is_mapped()) {
-          g_display_ptr->gdr_reset_option_flags(gfx_surface_ptr, gfx_mapping_ptr, flags);
+          gfx_display_ptr->gdr_reset_option_flags(gfx_surface_ptr, gfx_mapping_ptr, flags);
       } else
           gfx_mapping_ptr->option_flags = flags;
 }
@@ -101,7 +101,7 @@ void  dc::gfx_set_option_flags(unsigned int flags) noexcept
 void  dc::gfx_set_render_flags(unsigned int flags) noexcept
 {
       if(gfx_surface_ptr->is_mapped()) {
-          g_display_ptr->gdr_reset_render_flags(gfx_surface_ptr, gfx_mapping_ptr, flags);
+          gfx_display_ptr->gdr_reset_render_flags(gfx_surface_ptr, gfx_mapping_ptr, flags);
       } else
           gfx_mapping_ptr->render_flags = flags;
 }
@@ -136,7 +136,7 @@ bool  dc::gfx_set_window_size(int sx, int sy) noexcept
 */
 uint8_t* dc::gfx_get_lb_ptr() noexcept
 {
-      return g_display_ptr->get_lb_ptr(gfx_surface_ptr);
+      return gfx_display_ptr->get_lb_ptr(gfx_surface_ptr);
 }
 
 /* gfx_get_hb_ptr()
@@ -144,7 +144,7 @@ uint8_t* dc::gfx_get_lb_ptr() noexcept
 */
 uint8_t* dc::gfx_get_hb_ptr() noexcept
 {
-      return g_display_ptr->get_hb_ptr(gfx_surface_ptr);
+      return gfx_display_ptr->get_hb_ptr(gfx_surface_ptr);
 }
 
 /* gfx_get_xb0_ptr()
@@ -152,7 +152,7 @@ uint8_t* dc::gfx_get_hb_ptr() noexcept
 */
 uint8_t* dc::gfx_get_xb0_ptr() noexcept
 {
-      return g_display_ptr->get_xb0_ptr(gfx_surface_ptr);
+      return gfx_display_ptr->get_xb0_ptr(gfx_surface_ptr);
 }
 
 /* gfx_get_xb0_ptr()
@@ -160,17 +160,17 @@ uint8_t* dc::gfx_get_xb0_ptr() noexcept
 */
 uint8_t* dc::gfx_get_xb1_ptr() noexcept
 {
-      return g_display_ptr->get_xb1_ptr(gfx_surface_ptr);
+      return gfx_display_ptr->get_xb1_ptr(gfx_surface_ptr);
 }
 
 void  dc::gfx_scroll_rel(int dx, int dy) noexcept
 {
-      return g_display_ptr->scroll_rel(gfx_surface_ptr, dx, dy);
+      return gfx_display_ptr->scroll_rel(gfx_surface_ptr, dx, dy);
 }
 
 void  dc::gfx_scroll_abs(int dx, int dy) noexcept
 {
-      return g_display_ptr->scroll_abs(gfx_surface_ptr, dx, dy);
+      return gfx_display_ptr->scroll_abs(gfx_surface_ptr, dx, dy);
 }
 
 /* gfx_push_device()
@@ -178,7 +178,7 @@ void  dc::gfx_scroll_abs(int dx, int dy) noexcept
 void  dc::gfx_push_device(de& restore_cb, device* device) noexcept
 {
       // store current context
-      restore_cb.device_ptr  = g_display_ptr;
+      restore_cb.device_ptr  = gfx_display_ptr;
       restore_cb.cso_reserve = gfx_cso_reserve;
       restore_cb.cso_dispose = gfx_cso_dispose;
       restore_cb.cmo_reserve = gfx_cmo_reserve;
@@ -189,11 +189,12 @@ void  dc::gfx_push_device(de& restore_cb, device* device) noexcept
       restore_cb.pbo_dispose = gfx_pbo_dispose;
       restore_cb.cmo_load_preset = gfx_cmo_load_preset;
       restore_cb.cmo_load_resource = gfx_cmo_load_resource;
+      restore_cb.cso_load_ptr = gfx_cso_load_ptr;
       restore_cb.cso_load_resource = gfx_cso_load_resource;
       restore_cb.pbo_load_resource = gfx_pbo_load_resource;
 
       // apply new context
-      g_display_ptr = device;
+      gfx_display_ptr = device;
 }
 
 void  dc::gfx_push_surface(se& restore_cb, surface* surface_ptr, mapping_base_t* mapping_ptr) noexcept
@@ -219,10 +220,11 @@ void  dc::gfx_pop_surface(se& restore_cb) noexcept
 */
 void  dc::gfx_pop_device(de& restore_cb) noexcept
 {
-      g_display_ptr   = restore_cb.device_ptr;
+      gfx_display_ptr   = restore_cb.device_ptr;
 
       gfx_pbo_load_resource = restore_cb.pbo_load_resource;
       gfx_cso_load_resource = restore_cb.cso_load_resource;
+      gfx_cso_load_ptr = restore_cb.cso_load_ptr;
       gfx_cmo_load_resource = restore_cb.cmo_load_resource;
       gfx_cmo_load_preset = restore_cb.cmo_load_preset;
 

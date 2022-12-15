@@ -1,5 +1,3 @@
-#ifndef gfx_crm_driver_h
-#define gfx_crm_driver_h
 /** 
     Copyright (c) 2022, wicked systems
     All rights reserved.
@@ -21,32 +19,43 @@
     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-#include <gfx.h>
-#include <gfx/driver.h>
+#include "sw_render_base.h"
 
 namespace gfx {
 
-/* crm
- * provides gfx with functionality that standard C library covers, on platforms where that's available
-*/
-class crm: public driver
+      sw_render_base::sw_render_base() noexcept:
+      device(),
+      m_display_sx(0),
+      m_display_sy(0),
+      m_ready_bit(false)
 {
-  public:
-  static  bool  cmo_load_preset(cmo&, int, unsigned int, int) noexcept;
-  static  bool  cmo_load_resource(cmo&, const char*, unsigned int, int) noexcept;
-  static  bool  cso_load_resource(cso&, const char*, unsigned int, int, int) noexcept;
-  static  bool  pbo_load_resource(pbo&, const char*, unsigned int, int, int) noexcept;
-  
-  public:
-          crm() noexcept;
-          crm(const crm&) noexcept;
-          crm(crm&&) noexcept;
+}
 
-  static  void load() noexcept;
+      sw_render_base::~sw_render_base()
+{
+}
 
-          crm& operator=(const crm&) noexcept;
-          crm& operator=(crm&&) noexcept;
-};
-  
+bool  sw_render_base::gdd_reset_rendering_context() noexcept
+{
+      return true;
+}
+
+void  sw_render_base::gdd_render(surface* surface_ptr, mapping_base_t* mapping_base_ptr) noexcept
+{
+}
+
+void  sw_render_base::gdd_unset_rendering_context() noexcept
+{
+}
+
+int   sw_render_base::get_display_sx() const noexcept
+{
+      return m_display_sx;
+}
+
+int   sw_render_base::get_display_sy() const noexcept
+{
+      return m_display_sy;
+}
+
 /*namespace gfx*/ }
-#endif

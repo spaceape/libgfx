@@ -34,6 +34,7 @@ class surface: public dc
   surface*      m_attach_prev;
   surface*      m_attach_next;
   bool          m_allow_attach;
+  bool          m_allow_callbacks;
 
   public:
   /* map_*
@@ -79,8 +80,8 @@ class surface: public dc
   friend class device;
   friend class dc;
   public:
-          surface(bool) noexcept;
-          surface(surface*, bool) noexcept;
+          surface(bool, bool = true) noexcept;
+          surface(surface*, bool, bool = true) noexcept;
           surface(const surface&) noexcept = delete;
           surface(surface&&) noexcept = delete;
   virtual ~surface();

@@ -4,7 +4,7 @@ set(NAME driver)
 set(DRIVER_SDK_DIR ${GFX_SDK_DIR}/driver)
 
 set(inc
-  crm.h hmm.h
+  com.h hmm.h
 )
 
 add_subdirectory(common)

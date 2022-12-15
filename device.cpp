@@ -29,7 +29,7 @@
 namespace gfx {
 
       device::device() noexcept:
-      surface(true)
+      surface(true, false)
 {
 }
 
@@ -41,9 +41,11 @@ bool  device::gdx_prepare_surface(surface* surface_ptr, mapping_base_t* mapping_
 {
       bool l_result = true;
       se   l_surface_restore_cb;
-      gfx_push_surface(l_surface_restore_cb, surface_ptr, mapping_ptr);
-      l_result = surface_ptr->gfx_prepare(this);
-      gfx_pop_surface(l_surface_restore_cb);
+      if(surface_ptr->m_allow_callbacks) {
+          gfx_push_surface(l_surface_restore_cb, surface_ptr, mapping_ptr);
+          l_result = surface_ptr->gfx_prepare(this);
+          gfx_pop_surface(l_surface_restore_cb);
+      }
       return l_result;
 }
 
@@ -54,11 +56,13 @@ void  device::gdx_render_surface(surface* surface_ptr) noexcept
 
 bool  device::gdx_release_surface(surface* surface_ptr, mapping_base_t* mapping_ptr) noexcept
 {
-      bool l_result;
+      bool l_result = true;
       se   l_surface_restore_cb;
-      gfx_push_surface(l_surface_restore_cb, surface_ptr, mapping_ptr);
-      l_result = surface_ptr->gfx_release(this);
-      gfx_pop_surface(l_surface_restore_cb);
+      if(surface_ptr->m_allow_callbacks) {
+          gfx_push_surface(l_surface_restore_cb, surface_ptr, mapping_ptr);
+          l_result = surface_ptr->gfx_release(this);
+          gfx_pop_surface(l_surface_restore_cb);
+      }
       return l_result;
 }
 
@@ -214,15 +218,13 @@ void  device::gdr_reset_mapping(surface* surface_ptr, mapping_base_t* mapping_pt
           if((mapping_ptr->wsx > 0) &&
               (mapping_ptr->wsy > 0)) {
               if(mapping_ptr->option_flags & surface::opt_request_tile_graphics) {
-                  if(mapping_ptr->format & mode_tile) {
+                  if((mapping_ptr->gsx >= glyph_sx_min) &&
+                      (mapping_ptr->gsy >= glyph_sy_min)) {
+                      int  l_csx = get_div_ub(mapping_ptr->wsx, mapping_ptr->gsx);
+                      int  l_csy = get_div_ub(mapping_ptr->wsy, mapping_ptr->gsy);
+                      l_cbo_up = gdd_reset_mapping_cbo(surface_ptr, mapping_ptr, l_csx, l_csy);
                       l_cbo_rq = true;
-                      if((mapping_ptr->gsx >= glyph_sx_min) &&
-                          (mapping_ptr->gsy >= glyph_sy_min)) {
-                          int  l_csx = get_div_ub(mapping_ptr->wsx, mapping_ptr->gsx);
-                          int  l_csy = get_div_ub(mapping_ptr->wsy, mapping_ptr->gsy);
-                          l_cbo_up = gdd_reset_mapping_cbo(surface_ptr, mapping_ptr, l_csx, l_csy);
-                          l_render_bit |= l_cbo_up;
-                      }
+                      l_render_bit |= l_cbo_up;
                   }
               }
               if(mapping_ptr->option_flags & surface::opt_request_raster_graphics) {

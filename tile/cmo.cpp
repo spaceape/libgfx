@@ -65,7 +65,7 @@ namespace gfx {
 /* ref
 */
       cmo::ref::ref() noexcept:
-      m_format(fmt_argb_8888),
+      m_format(fmt_undef),
       m_count(0),
       m_data(nullptr),
       m_size(0),

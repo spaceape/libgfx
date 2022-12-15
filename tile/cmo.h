@@ -128,6 +128,18 @@ class cmo: public ac
           bool   reset(unsigned int, int) noexcept;
           bool   reset(unsigned int, int, std::uint8_t*, std::size_t) noexcept;
 
+  inline  std::uint8_t get_uint8(int index) const noexcept {
+          return *m_ptr->get_data_at(index);
+  }
+  
+  inline  std::uint16_t get_uint16(int index) const noexcept {
+          return *reinterpret_cast<std::uint16_t*>(m_ptr->get_data_at(index));
+  }
+
+  inline  std::uint32_t get_uint32(int index) const noexcept {
+          return *reinterpret_cast<std::uint32_t*>(m_ptr->get_data_at(index));
+  }
+
           bool   set_uint8(int, std::uint8_t) noexcept;
           bool   set_uint32(int, std::uint8_t, std::uint8_t, std::uint8_t, std::uint8_t) noexcept;
           bool   set_uint32(int, std::uint32_t) noexcept;
@@ -142,7 +154,7 @@ class cmo: public ac
   inline  std::uint8_t* get_data_ptr() const noexcept {
           return m_ptr->get_data_ptr();
   }
-  
+
   inline  int    get_data_size() const noexcept {
           return m_ptr->get_data_size();
   }

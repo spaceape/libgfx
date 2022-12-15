@@ -4,6 +4,7 @@ set(NAME support)
 set(SUPPORT_SDK_DIR ${GFX_SDK_DIR}/support)
 
 set(inc
+  sw_render_base.h gl_render_base.h
 )
 
 add_subdirectory(gl)

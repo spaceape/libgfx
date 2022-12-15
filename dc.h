@@ -92,6 +92,7 @@ struct dc: public ac
 
       bool(*cmo_load_preset)(cmo&, int, unsigned int, int) noexcept;
       bool(*cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept;
+      bool(*cso_load_ptr)(cso&, std::uint8_t*, unsigned int, int, int) noexcept;
       bool(*cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept;
       bool(*pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept;
   };
@@ -105,12 +106,13 @@ struct dc: public ac
       mapping_base_t* mapping_ptr;
   };
 
-  static  surface*        gfx_surface_ptr;
-  static  mapping_base_t* gfx_mapping_ptr;
+  // static  surface*        gfx_surface_ptr;
+  // static  mapping_base_t* gfx_mapping_ptr;
 
   protected:
   static  bool(*gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept;
   static  bool(*gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept;
+  static  bool(*gfx_cso_load_ptr)(cso&, std::uint8_t*, unsigned int, int, int) noexcept;
   static  bool(*gfx_cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept;
   static  bool(*gfx_pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept;
 

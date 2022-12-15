@@ -5,12 +5,10 @@ set(NAME gfx)
 set(PREFIX)
 
 add_definitions(
-  -fPIC
   -DCPU=${CPU}
   -DDPU=${DPU} -DDPU_H=<dpu/${DPU}.h>
   -DFPU=${FPU} -DFPU_H=<fpu/${FPU}.h>
   -DGPU=${GPU} -DGPU_H=<gpu/${GPU}.h>
-  -DPIC
   ${HOST_DEFS}
 )
 
@@ -39,7 +37,9 @@ set(common_srcs
   
   vector.cpp
   
-  driver/hmm.cpp
+  driver/hmm.cpp driver/com.cpp
+
+  support/sw_render_base.cpp
 
   surface.cpp device.cpp
 
@@ -55,7 +55,6 @@ set(system_srcs)
 set(system_libs)
 if("${OS}" MATCHES "Linux")
   set(system_srcs
-      driver/crm.cpp
       support/gl/array_ptr.cpp support/gl/buffer_ptr.cpp support/gl/index_ptr.cpp
       support/gl/texture_ptr.cpp support/gl/shader_ptr.cpp support/gl/program_ptr.cpp
       support/gl_render_base.cpp    

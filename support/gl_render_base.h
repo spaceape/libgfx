@@ -24,9 +24,6 @@
 #include <gfx.h>
 #include <fpu.h>
 #include <gfx/device.h>
-// #include <gfx/vector/buffer_ptr.h>
-// #include <gfx/vector/array_ptr.h>
-// #include <gfx/vector/texture_ptr.h>
 #include "gl/program_ptr.h"
 
 namespace gfx {
@@ -110,7 +107,7 @@ class gl_render_base: public device
           gl_render_base() noexcept;
           gl_render_base(const gl_render_base&) noexcept = delete;
           gl_render_base(gl_render_base&&) noexcept = delete;
-          ~gl_render_base();
+  virtual ~gl_render_base();
 
           int    get_display_px0() const noexcept;
           int    get_display_py0() const noexcept;

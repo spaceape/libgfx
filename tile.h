@@ -50,7 +50,7 @@ constexpr std::uint16_t fmt_mono_bcs = mode_lb;      // monochrome and basic cha
 constexpr std::uint16_t mode_hb = 4u;
 constexpr std::uint16_t fmt_mono_xcs = mode_hb;      // monochrome and extended charset
 
-constexpr std::uint16_t mode_cb = 12u;                // 256 colour, extended charset
+constexpr std::uint16_t mode_cb = 8u;                // 256 colour, extended charset
 constexpr std::uint16_t fmt_colour_xcs = mode_cb;
 
 constexpr std::uint16_t mode_tile = 0x000c;

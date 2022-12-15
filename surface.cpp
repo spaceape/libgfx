@@ -26,20 +26,21 @@
 
 namespace gfx {
 
-      surface::surface(bool o_allow_attach) noexcept:
+      surface::surface(bool o_allow_attach, bool o_allow_callbacks) noexcept:
       dc(),
       m_manager(nullptr),
       m_mid(nullptr),
       m_attach_prev(nullptr),
       m_attach_next(nullptr),
       m_allow_attach(o_allow_attach),
+      m_allow_callbacks(o_allow_callbacks),
       m_attach_head(nullptr),
       m_attach_tail(nullptr)
 {
 }
 
-      surface::surface(surface* manager, bool o_allow_attach) noexcept:
-      surface(o_allow_attach)
+      surface::surface(surface* manager, bool o_allow_attach, bool o_allow_callbacks) noexcept:
+      surface(o_allow_attach, o_allow_callbacks)
 {
       manager->attach(this);
 }
