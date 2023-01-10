@@ -55,6 +55,7 @@ static void cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, i
             r_bits = 5;
             g_bits = 6;
             b_bits = 5;
+            break;
         case fmt_argb_1111:
             a_bits = 1;
             r_bits = 1;
@@ -92,40 +93,40 @@ static void cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, i
    generate the primary colours and their combinations at the specified offset into the colour map and with the specified
    saturation value;
 */
-static int cmo_gen_primary(cmo& cmo, int offset, int alpha, int saturation) noexcept
-{
-      int l_a_bits;
-      int l_r_bits;
-      int l_g_bits;
-      int l_b_bits;
-      // if(format & mode_colour) {
-          // cmo_get_colour_bits(format, l_a_bits, l_r_bits, l_g_bits, l_b_bits);
-          if((l_r_bits > 0) &&
-              (l_g_bits > 0) &&
-              (l_b_bits > 0)) {
-              int l_colour_index = 0;
-              int l_colour_base  = offset;
-              std::uint8_t l_a_value;
-              std::uint8_t l_r_value;
-              std::uint8_t l_g_value;
-              std::uint8_t l_b_value;
-              // run throug a loop from 0..3 and 
-              for(int i_cs = 0; i_cs < 4; i_cs++) {
-                  if(i_cs == 0) {
-                  }
-                  l_colour_index++;
-              }
-              // std::uint8_t l_a_value;
-              // std::uint8_t l_r_value;
-              // std::uint8_t l_g_value;
-              // std::uint8_t l_b_value;
-              // int l_colour_index = 0;
-              // int l_colour_base  = offset;
-              // for(l_colour_index = 0; l_colour_index = 
-          }
-      // }
-      return 0;
-}
+// static int cmo_gen_primary(cmo& cmo, int offset, int alpha, int saturation) noexcept
+// {
+//       int l_a_bits;
+//       int l_r_bits;
+//       int l_g_bits;
+//       int l_b_bits;
+//       // if(format & mode_colour) {
+//           // cmo_get_colour_bits(format, l_a_bits, l_r_bits, l_g_bits, l_b_bits);
+//           if((l_r_bits > 0) &&
+//               (l_g_bits > 0) &&
+//               (l_b_bits > 0)) {
+//               int l_colour_index = 0;
+//               int l_colour_base  = offset;
+//               std::uint8_t l_a_value;
+//               std::uint8_t l_r_value;
+//               std::uint8_t l_g_value;
+//               std::uint8_t l_b_value;
+//               // run throug a loop from 0..3 and 
+//               for(int i_cs = 0; i_cs < 4; i_cs++) {
+//                   if(i_cs == 0) {
+//                   }
+//                   l_colour_index++;
+//               }
+//               // std::uint8_t l_a_value;
+//               // std::uint8_t l_r_value;
+//               // std::uint8_t l_g_value;
+//               // std::uint8_t l_b_value;
+//               // int l_colour_index = 0;
+//               // int l_colour_base  = offset;
+//               // for(l_colour_index = 0; l_colour_index = 
+//           }
+//       // }
+//       return 0;
+// }
 
       com::com() noexcept
 {
@@ -191,40 +192,40 @@ bool  com::cso_load_ptr(cso& cso, std::uint8_t* data, unsigned int format, int s
 */
 bool  com::cso_load_resource(cso& cso, const char* file_name, unsigned int format, int sx, int sy) noexcept
 {
-#ifdef UNIX
-      if(bool
-          l_reset_success = cso.reset(format, sx, sy);
-          l_reset_success == true) {
-          if(auto l_data_ptr = cso.get_data_ptr(); l_data_ptr != nullptr) {
-              int l_data_file = open(file_name, O_RDONLY);
-              if(l_data_file >= 0) {
-                  int  l_read_size;
-                  int  l_data_size    = cso.get_data_size();
-                  bool l_read_success = true;
-                  // load data
-                  while(l_data_size > 0) {
-                      if(l_data_size > file_read_size) {
-                          l_read_size = read(l_data_file, l_data_ptr, file_read_size);
-                      } else
-                          l_read_size = read(l_data_file, l_data_ptr, l_data_size);
-                      if(l_read_size <= 0) {
-                          break;
+      if constexpr (os::is_unix) {
+          if(bool
+              l_reset_success = cso.reset(format, sx, sy);
+              l_reset_success == true) {
+              if(auto l_data_ptr = cso.get_data_ptr(); l_data_ptr != nullptr) {
+                  int l_data_file = open(file_name, O_RDONLY);
+                  if(l_data_file >= 0) {
+                      int  l_read_size;
+                      int  l_data_size    = cso.get_data_size();
+                      bool l_read_success = true;
+                      // load data
+                      while(l_data_size > 0) {
+                          if(l_data_size > file_read_size) {
+                              l_read_size = read(l_data_file, l_data_ptr, file_read_size);
+                          } else
+                              l_read_size = read(l_data_file, l_data_ptr, l_data_size);
+                          if(l_read_size <= 0) {
+                              break;
+                          }
+                          l_data_ptr  += l_read_size;
+                          l_data_size -= l_read_size;
                       }
-                      l_data_ptr  += l_read_size;
-                      l_data_size -= l_read_size;
-                  }
-                  // clear remaining unset bytes, if any
-                  if(l_read_success) {
-                      if(l_data_size > 0) {
-                          std::memset(l_data_ptr, 0, l_data_size);
+                      // clear remaining unset bytes, if any
+                      if(l_read_success) {
+                          if(l_data_size > 0) {
+                              std::memset(l_data_ptr, 0, l_data_size);
+                          }
                       }
+                      close(l_data_file);
+                      return l_read_success;
                   }
-                  close(l_data_file);
-                  return l_read_success;
               }
           }
       }
-#endif
       return false;
 }
 

@@ -401,33 +401,34 @@ void  device::gfx_sync(int dt) noexcept
 
 bool  device::map(surface* surface_ptr, int px, int py, int sx, int sy) noexcept
 {
-      mapping_base_t* p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
-      if(p_mapping == nullptr) {
-          if(surface_ptr != this) {
-              if(surface_ptr != nullptr) {
+      if((surface_ptr != this) &&
+          (surface_ptr != nullptr)) {
+          mapping_base_t* p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          if(p_mapping == nullptr) {
+              if(surface_ptr->m_manager == this) {
                   p_mapping = gdr_make_mapping(surface_ptr);
               }
           }
-      }
-      if(p_mapping != nullptr) {
-          if((sx < 0) ||
-              (sx > std::numeric_limits<short int>::max())) {
-              return false;
+          if(p_mapping != nullptr) {
+              if((sx < 0) ||
+                  (sx > std::numeric_limits<short int>::max())) {
+                  return false;
+              }
+              if((sy < 0) ||
+                  (sy > std::numeric_limits<short int>::max())) {
+                  return false;
+              }
+              if((px < std::numeric_limits<short int>::min()) ||
+                  (px > std::numeric_limits<short int>::max())) {
+                  return false;
+              }
+              if((py < std::numeric_limits<short int>::min()) ||
+                  (py > std::numeric_limits<short int>::max())) {
+                  return false;
+              }
+              gdr_reset_mapping_geometry(surface_ptr, p_mapping, px, py, sx, sy);
+              return true;
           }
-          if((sy < 0) ||
-              (sy > std::numeric_limits<short int>::max())) {
-              return false;
-          }
-          if((px < std::numeric_limits<short int>::min()) ||
-              (px > std::numeric_limits<short int>::max())) {
-              return false;
-          }
-          if((py < std::numeric_limits<short int>::min()) ||
-              (py > std::numeric_limits<short int>::max())) {
-              return false;
-          }
-          gdr_reset_mapping_geometry(surface_ptr, p_mapping, px, py, sx, sy);
-          return true;
       }
       return false;
 }

@@ -1,5 +1,5 @@
-#ifndef gfx_scene_h
-#define gfx_scene_h
+#ifndef gfx_device_h
+#define gfx_device_h
 /** 
     Copyright (c) 2021, wicked systems
     All rights reserved.
