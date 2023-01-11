@@ -15,7 +15,7 @@ void main()
 {
     int l_tile_index   = int(g_tile_options[0]);
     int l_tile_px      = int(g_tile_offset.x);
-    int l_tile_py      = int(g_tile_offset.y);
+    int l_tile_py      = int(g_tile_geometry.y - g_tile_offset.y);
     int l_tile_sx      = int(g_tile_geometry.x);
     int l_tile_sy      = int(g_tile_geometry.y);
     int l_texture_bits = 1;

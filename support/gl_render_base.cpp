@@ -303,8 +303,8 @@ void  gl_render_base::gdd_reset_mapping_geometry(surface* surface_ptr, mapping_b
       if(p_mapping->option_flags & surface::opt_graphics_flags) {
           p_mapping->gl_surface_px = m_scene_geometry[0] + static_cast<float>(p_mapping->px - m_scene_px0) * m_scene_metrics[0];
           p_mapping->gl_surface_py = m_scene_geometry[1] - static_cast<float>(p_mapping->py - m_scene_py0) * m_scene_metrics[1];
-          p_mapping->gl_surface_sx = m_scene_geometry[2];
-          p_mapping->gl_surface_sy = m_scene_geometry[3];
+          p_mapping->gl_surface_sx = m_scene_geometry[0] + static_cast<float>(p_mapping->sx) * m_scene_metrics[0];
+          p_mapping->gl_surface_sy = m_scene_geometry[1] + static_cast<float>(p_mapping->sy) * m_scene_metrics[1];
       }
 }
 
@@ -326,8 +326,11 @@ void  gl_render_base::gdd_render(surface* surface_ptr, mapping_base_t* mapping_b
       if(p_mapping->render_flags != surface::map_none) {
           if(p_mapping->option_flags & surface::opt_graphics_flags) {
               auto& l_cbo = p_mapping->cb;
+              int   l_csx = l_cbo.get_sx();
+              int   l_csy = l_csx * (p_mapping->sy / p_mapping->gsy);
+              int   l_cdy = l_csx * (p_mapping->dy / p_mapping->gsy);
               m_device_program.set_uniform("m_surface_format", p_mapping->format, 0, p_mapping->gsx, p_mapping->gsy);
-              m_device_program.set_uniform("m_surface_metrics", l_cbo.get_sx(), l_cbo.get_sy(), 0, 0);
+              m_device_program.set_uniform("m_surface_metrics", l_csx, l_csy, 0, l_cdy);
               m_device_program.set_uniform("m_surface_geometry", p_mapping->gl_surface_px, p_mapping->gl_surface_py, p_mapping->gl_surface_sx, p_mapping->gl_surface_sy);
               m_device_program.set_uniform("m_render_geometry", p_mapping->gl_surface_px, p_mapping->gl_surface_py, p_mapping->gl_surface_sx, p_mapping->gl_surface_sy);
               gl::ActiveTexture(GL_TEXTURE0 + 0);
@@ -345,7 +348,7 @@ void  gl_render_base::gdd_render(surface* surface_ptr, mapping_base_t* mapping_b
                       }
                   }
                   // gl::BindBuffer(GL_ARRAY_BUFFER, p_mapping->gl_tr_vbo);
-                  gl::DrawArrays(GL_POINTS, 0, l_cbo.get_sx() * l_cbo.get_sy());
+                  gl::DrawArrays(GL_POINTS, l_cdy, l_csy);
               }
           }
       }

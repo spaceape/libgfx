@@ -34,17 +34,17 @@ void  main()
       g_tile_offset.y = g_tile_geometry.y;
       EmitVertex();
 
-      gl_Position = gl_in[0].gl_Position + vec4(0.0f, g_tile_geometry.w, 0.0f, 0.0f);
+      gl_Position = gl_in[0].gl_Position + vec4(0.0f, 0.0f - g_tile_geometry.w, 0.0f, 0.0f);
       g_tile_offset.x = 0.0f;
       g_tile_offset.y = 0.0f;
       EmitVertex();
 
-      gl_Position = gl_in[0].gl_Position + vec4(g_tile_geometry.z, g_tile_geometry.w, 0.0f, 0.0f);
+      gl_Position = gl_in[0].gl_Position + vec4(g_tile_geometry.z, 0.0f - g_tile_geometry.w, 0.0f, 0.0f);
       g_tile_offset.x = g_tile_geometry.x;
       g_tile_offset.y = 0.0f;
       EmitVertex();
 
-      gl_Position = gl_in[0].gl_Position + vec4(0.0f, g_tile_geometry.w, 0.0f, 0.0f);
+      gl_Position = gl_in[0].gl_Position + vec4(0.0f, 0.0f - g_tile_geometry.w, 0.0f, 0.0f);
       g_tile_offset.x = 0.0f;
       g_tile_offset.y = 0.0f;
       EmitVertex();

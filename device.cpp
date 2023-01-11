@@ -549,12 +549,12 @@ void  device::scroll_rel(surface* surface_ptr, int dx, int dy) noexcept
           p_mapping != nullptr) {
           // update the limits on the horizontal scrolling parameter
           p_mapping->dx += dx;
-          if(p_mapping->dx + p_mapping->sx < p_mapping->wsx) {
+          if(p_mapping->dx + p_mapping->sx > p_mapping->wsx) {
               p_mapping->dx = p_mapping->wsx - p_mapping->sx;
           }
           // update the limits on the vertical scrolling parameter
           p_mapping->dy += dy;
-          if(p_mapping->dy + p_mapping->sy < p_mapping->wsy) {
+          if(p_mapping->dy + p_mapping->sy > p_mapping->wsy) {
               p_mapping->dy = p_mapping->wsy - p_mapping->sy;
           }
       }
@@ -567,12 +567,12 @@ void  device::scroll_abs(surface* surface_ptr, int dx, int dy) noexcept
           p_mapping != nullptr) {
           // update the limits on the horizontal scrolling parameter
           p_mapping->dx = dx;
-          if(p_mapping->dx + p_mapping->sx < p_mapping->wsx) {
+          if(p_mapping->dx + p_mapping->sx > p_mapping->wsx) {
               p_mapping->dx = p_mapping->wsx - p_mapping->sx;
           }
           // update the limits on the vertical scrolling parameter
           p_mapping->dy = dy;
-          if(p_mapping->dy + p_mapping->sy < p_mapping->wsy) {
+          if(p_mapping->dy + p_mapping->sy > p_mapping->wsy) {
               p_mapping->dy = p_mapping->wsy - p_mapping->sy;
           }
       }

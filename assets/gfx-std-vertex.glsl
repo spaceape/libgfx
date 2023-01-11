@@ -64,10 +64,10 @@ out vec4 m_saturation;
 void main()
 {
     // current column
-    int x = gl_VertexID % m_surface_metrics.x;
+    int x = (gl_VertexID - m_surface_metrics[3]) % m_surface_metrics[0];
 
     // current row
-    int y = gl_VertexID / m_surface_metrics.x;
+    int y = (gl_VertexID - m_surface_metrics[3]) / m_surface_metrics[0];
 
     m_tile_geometry.x = float(m_surface_format.z);
     m_tile_geometry.y = float(m_surface_format.w);
