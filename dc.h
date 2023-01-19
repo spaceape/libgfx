@@ -123,9 +123,13 @@ struct dc: public ac
   static  bool      gfx_set_window_size(int, int) noexcept;
 
   static  uint8_t*  gfx_get_lb_ptr() noexcept;
+  static  uint8_t*  gfx_get_lb_ptr(int, int = 0) noexcept;
   static  uint8_t*  gfx_get_hb_ptr() noexcept;
-  static  uint8_t*  gfx_get_xb0_ptr() noexcept;
-  static  uint8_t*  gfx_get_xb1_ptr() noexcept;
+  static  uint8_t*  gfx_get_hb_ptr(int, int = 0) noexcept;
+  static  uint8_t*  gfx_get_bg_ptr() noexcept;
+  static  uint8_t*  gfx_get_bg_ptr(int, int = 0) noexcept;
+  static  uint8_t*  gfx_get_fg_ptr() noexcept;
+  static  uint8_t*  gfx_get_fg_ptr(int, int = 0) noexcept;
 
   static  void      gfx_scroll_rel(int, int) noexcept;
   static  void      gfx_scroll_abs(int, int) noexcept;

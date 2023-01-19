@@ -100,6 +100,10 @@ class gl_render_base: public device
           void            gfx_reset_edges(int, int, int, int) noexcept;
           void            gfx_reset_viewport_size(int, int) noexcept;
           void            gfx_reset_scene_geometry(int, int, int, int) noexcept;
+          void            gfx_reset_background_colour(float, float, float, float) noexcept;
+          void            gfx_reset_background_colour(int, int, int, int) noexcept;
+          void            gfx_reset_foreground_colour(float, float, float, float) noexcept;
+          void            gfx_reset_foreground_colour(int, int, int, int) noexcept;
           void            gfx_update_device() noexcept;
           void            gfx_dispose_device(bool = true) noexcept;
 

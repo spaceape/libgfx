@@ -92,9 +92,13 @@ class device: public surface
           bool   set_cso(surface*, int, const cso&) noexcept;
 
           std::uint8_t*  get_lb_ptr(surface*) const noexcept;
+          std::uint8_t*  get_lb_ptr(surface*, int, int) const noexcept;
           std::uint8_t*  get_hb_ptr(surface*) const noexcept;
-          std::uint8_t*  get_xb0_ptr(surface*) const noexcept;
-          std::uint8_t*  get_xb1_ptr(surface*) const noexcept;
+          std::uint8_t*  get_hb_ptr(surface*, int, int) const noexcept;
+          std::uint8_t*  get_bg_ptr(surface*) const noexcept;
+          std::uint8_t*  get_bg_ptr(surface*, int, int) const noexcept;
+          std::uint8_t*  get_fg_ptr(surface*) const noexcept;
+          std::uint8_t*  get_fg_ptr(surface*, int, int) const noexcept;
 
           void   scroll_rel(surface*, int, int) noexcept;
           void   scroll_abs(surface*, int, int) noexcept;

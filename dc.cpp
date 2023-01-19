@@ -139,6 +139,11 @@ uint8_t* dc::gfx_get_lb_ptr() noexcept
       return gfx_display_ptr->get_lb_ptr(gfx_surface_ptr);
 }
 
+uint8_t* dc::gfx_get_lb_ptr(int dx, int dy) noexcept
+{
+      return gfx_display_ptr->get_lb_ptr(gfx_surface_ptr, dx, dy);
+}
+
 /* gfx_get_hb_ptr()
    get a pointer to the 'high byte' segment of the screen buffer (see gfx/tile.h)
 */
@@ -147,22 +152,40 @@ uint8_t* dc::gfx_get_hb_ptr() noexcept
       return gfx_display_ptr->get_hb_ptr(gfx_surface_ptr);
 }
 
-/* gfx_get_xb0_ptr()
+uint8_t* dc::gfx_get_hb_ptr(int dx, int dy) noexcept
+{
+      return gfx_display_ptr->get_hb_ptr(gfx_surface_ptr, dx, dy);
+}
+
+/* gfx_get_bg_ptr()
    get a pointer to the least significant 'extended byte' segment of the screen buffer (see gfx/tile.h)
 */
-uint8_t* dc::gfx_get_xb0_ptr() noexcept
+uint8_t* dc::gfx_get_bg_ptr() noexcept
 {
-      return gfx_display_ptr->get_xb0_ptr(gfx_surface_ptr);
+      return gfx_display_ptr->get_bg_ptr(gfx_surface_ptr);
 }
 
-/* gfx_get_xb0_ptr()
+uint8_t* dc::gfx_get_bg_ptr(int dx, int dy) noexcept
+{
+      return gfx_display_ptr->get_bg_ptr(gfx_surface_ptr, dx, dy);
+}
+
+/* gfx_get_fg_ptr()
    get a pointer to the most significant 'extended byte' segment of the screen buffer (see gfx/tile.h)
 */
-uint8_t* dc::gfx_get_xb1_ptr() noexcept
+uint8_t* dc::gfx_get_fg_ptr() noexcept
 {
-      return gfx_display_ptr->get_xb1_ptr(gfx_surface_ptr);
+      return gfx_display_ptr->get_fg_ptr(gfx_surface_ptr);
 }
 
+uint8_t* dc::gfx_get_fg_ptr(int dx, int dy) noexcept
+{
+      return gfx_display_ptr->get_fg_ptr(gfx_surface_ptr, dx, dy);
+}
+
+/* gfx_scroll_*()
+   get a pointer to the most significant 'extended byte' segment of the screen buffer (see gfx/tile.h)
+*/
 void  dc::gfx_scroll_rel(int dx, int dy) noexcept
 {
       return gfx_display_ptr->scroll_rel(gfx_surface_ptr, dx, dy);

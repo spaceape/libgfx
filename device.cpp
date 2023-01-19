@@ -512,6 +512,16 @@ std::uint8_t* device::get_lb_ptr(surface* surface_ptr) const noexcept
       return nullptr;
 }
 
+std::uint8_t* device::get_lb_ptr(surface* surface_ptr, int dx, int dy) const noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          return p_mapping->cb.get_lb_ptr(dx, dy);
+      }
+      return nullptr;
+}
+
 std::uint8_t* device::get_hb_ptr(surface* surface_ptr) const noexcept
 {
       if(mapping_base_t*
@@ -522,7 +532,17 @@ std::uint8_t* device::get_hb_ptr(surface* surface_ptr) const noexcept
       return nullptr;
 }
 
-std::uint8_t* device::get_xb0_ptr(surface* surface_ptr) const noexcept
+std::uint8_t* device::get_hb_ptr(surface* surface_ptr, int dx, int dy) const noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          return p_mapping->cb.get_hb_ptr(dx, dy);
+      }
+      return nullptr;
+}
+
+std::uint8_t* device::get_bg_ptr(surface* surface_ptr) const noexcept
 {
       if(mapping_base_t*
           p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
@@ -532,12 +552,32 @@ std::uint8_t* device::get_xb0_ptr(surface* surface_ptr) const noexcept
       return nullptr;
 }
 
-std::uint8_t* device::get_xb1_ptr(surface* surface_ptr) const noexcept
+std::uint8_t* device::get_bg_ptr(surface* surface_ptr, int dx, int dy) const noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          return p_mapping->cb.get_xb0_ptr(dx, dy);
+      }
+      return nullptr;
+}
+
+std::uint8_t* device::get_fg_ptr(surface* surface_ptr) const noexcept
 {
       if(mapping_base_t*
           p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
           p_mapping != nullptr) {
           return p_mapping->cb.get_xb1_ptr();
+      }
+      return nullptr;
+}
+
+std::uint8_t* device::get_fg_ptr(surface* surface_ptr, int dx, int dy) const noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          return p_mapping->cb.get_xb1_ptr(dx, dy);
       }
       return nullptr;
 }

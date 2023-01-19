@@ -108,8 +108,8 @@ bool  cbo::reset(unsigned int format, int sx, int sy) noexcept
 
 bool  cbo::reset(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
 {
-      if((sx < std::numeric_limits<short int>::max()) &&
-          (sy < std::numeric_limits<short int>::max())) {
+      if((sx < dimension_max) &&
+          (sy < dimension_max)) {
           int  l_data_size     = size;
           int  l_data_size_min = get_data_size(format, sx, sy);
           dispose();

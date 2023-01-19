@@ -41,6 +41,7 @@ class cbo: public ac
 
   public:
   static constexpr int size_max = (1 << 23) - global::cache_small_max;
+  static constexpr int dimension_max = 1344;
 
   static constexpr int get_line_size(int sx) noexcept {
           return sx;

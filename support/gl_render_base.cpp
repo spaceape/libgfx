@@ -45,7 +45,7 @@ namespace gfx {
       m_viewport_metrics{0.0f, 0.0f, 0.0f, 0.0f},
       m_scene_geometry{0.0f, 0.0f, 0.0f, 0.0f},
       m_scene_metrics{0.0f, 0.0f, 0.0f, 0.0f},
-      m_background_colour{0.1f, 0.1f, 0.1f, 1.0f},
+      m_background_colour{0.05f, 0.05f, 0.05f, 1.0f},
       m_foreground_colour{1.0f, 1.0f, 1.0f, 1.0f},
       m_scale_bit(true),
       m_center_bit(true),
@@ -176,21 +176,24 @@ bool  gl_render_base::gdd_reset_mapping_cbo(surface*, mapping_base_t* mapping_ba
                   l_format = p_mapping->format;
                   l_size   = cbo::get_data_size(l_format, cx, cy);
                   gl::BindBuffer(GL_ARRAY_BUFFER, p_mapping->gl_tr_vbo);
+                  // NOTE: Potential bug here: sometimes, after a buffer resize - the image remains still, although all events
+                  // are running and and the correct buffer pointer is being updated.
+                  if(l_cbo) {
+                      gl::UnmapBuffer(GL_ARRAY_BUFFER);
+                  }
                   gl::BufferData(GL_ARRAY_BUFFER, l_size, nullptr, GL_DYNAMIC_DRAW);
                   l_data = gl::MapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
                   l_cbo  = cbo(l_format, cx, cy, reinterpret_cast<std::uint8_t*>(l_data), l_size);
-                  if(l_cbo) {
-                      gl::VertexAttribIPointer(0, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_lb_offset()));
-                      gl::EnableVertexAttribArray(0);
-                      if(l_format & mode_tile & mode_hb) {
-                          gl::VertexAttribIPointer(1, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_hb_offset()));
-                          gl::EnableVertexAttribArray(1);
-                          if(l_format & mode_tile & mode_cb) {
-                              gl::VertexAttribIPointer(2, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_xb0_offset()));
-                              gl::EnableVertexAttribArray(2);
-                              gl::VertexAttribIPointer(3, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_xb1_offset()));
-                              gl::EnableVertexAttribArray(3);
-                          }
+                  gl::VertexAttribIPointer(0, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_lb_offset()));
+                  gl::EnableVertexAttribArray(0);
+                  if(l_format & mode_tile & mode_hb) {
+                      gl::VertexAttribIPointer(1, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_hb_offset()));
+                      gl::EnableVertexAttribArray(1);
+                      if(l_format & mode_tile & mode_cb) {
+                          gl::VertexAttribIPointer(2, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_xb0_offset()));
+                          gl::EnableVertexAttribArray(2);
+                          gl::VertexAttribIPointer(3, 1, GL_UNSIGNED_BYTE, 1, reinterpret_cast<void*>(l_cbo.get_xb1_offset()));
+                          gl::EnableVertexAttribArray(3);
                       }
                   }
               }
@@ -310,7 +313,7 @@ void  gl_render_base::gdd_reset_mapping_geometry(surface* surface_ptr, mapping_b
 
 bool  gl_render_base::gdd_reset_rendering_context() noexcept
 {
-      gl::ClearColor(0.1f, 0.1f, 0.1f, 0.1f);
+      gl::ClearColor(m_background_colour[0], m_background_colour[1], m_background_colour[2], 1.0f);
       gl::Clear(GL_COLOR_BUFFER_BIT);
       m_device_program.bind();
       m_device_program.set_uniform("m_scene_geometry", m_scene_geometry);
@@ -327,15 +330,27 @@ void  gl_render_base::gdd_render(surface* surface_ptr, mapping_base_t* mapping_b
           if(p_mapping->option_flags & surface::opt_graphics_flags) {
               auto& l_cbo = p_mapping->cb;
               int   l_csx = l_cbo.get_sx();
-              int   l_csy = l_csx * (p_mapping->sy / p_mapping->gsy);
-              int   l_cdy = l_csx * (p_mapping->dy / p_mapping->gsy);
+              int   l_csy = l_csx * get_div_ub(p_mapping->sy, p_mapping->gsy);
+              int   l_cdy = l_csx * get_div_lb(p_mapping->dy, p_mapping->gsy);
               m_device_program.set_uniform("m_surface_format", p_mapping->format, 0, p_mapping->gsx, p_mapping->gsy);
               m_device_program.set_uniform("m_surface_metrics", l_csx, l_csy, 0, l_cdy);
-              m_device_program.set_uniform("m_surface_geometry", p_mapping->gl_surface_px, p_mapping->gl_surface_py, p_mapping->gl_surface_sx, p_mapping->gl_surface_sy);
-              m_device_program.set_uniform("m_render_geometry", p_mapping->gl_surface_px, p_mapping->gl_surface_py, p_mapping->gl_surface_sx, p_mapping->gl_surface_sy);
+              m_device_program.set_uniform(
+                  "m_surface_geometry",
+                  p_mapping->gl_surface_px,
+                  p_mapping->gl_surface_py,
+                  p_mapping->gl_surface_sx,
+                  p_mapping->gl_surface_sy
+              );
+              m_device_program.set_uniform(
+                  "m_render_geometry",
+                  p_mapping->gl_surface_px + p_mapping->dx * m_scene_metrics[0],
+                  p_mapping->gl_surface_py + p_mapping->dy * m_scene_metrics[1],
+                  p_mapping->gl_surface_sx,
+                  p_mapping->gl_surface_sy
+              );
               gl::ActiveTexture(GL_TEXTURE0 + 0);
               gl::BindTexture(GL_TEXTURE_BUFFER, p_mapping->gl_cm_tex);
-              // gl::TexBuffer(GL_TEXTURE_BUFFER, GL_RGBA8, p_mapping->gl_cm_tbo);
+              gl::TexBuffer(GL_TEXTURE_BUFFER, GL_RGBA8, p_mapping->gl_cm_tbo);
               m_device_program.set_uniform("m_colour_map", 0);
               if(p_mapping->option_flags & surface::opt_request_tile_graphics) {
                   gl::BindVertexArray(p_mapping->gl_tr_vao);
@@ -343,11 +358,11 @@ void  gl_render_base::gdd_render(surface* surface_ptr, mapping_base_t* mapping_b
                       if(p_mapping->gl_cs_tex[i_cso]) {
                           gl::ActiveTexture(GL_TEXTURE0 + i_cso + 1);
                           gl::BindTexture(GL_TEXTURE_BUFFER, p_mapping->gl_cs_tex[i_cso]);
-                          // gl::TexBuffer(GL_TEXTURE_BUFFER, GL_R8UI, p_mapping->gl_cs_tbo[i_cso]);
+                          gl::TexBuffer(GL_TEXTURE_BUFFER, GL_R8UI, p_mapping->gl_cs_tbo[i_cso]);
                           m_device_program.set_uniform("e_character_map", i_cso + 1);
                       }
                   }
-                  // gl::BindBuffer(GL_ARRAY_BUFFER, p_mapping->gl_tr_vbo);
+                  gl::BindBuffer(GL_ARRAY_BUFFER, p_mapping->gl_tr_vbo);
                   gl::DrawArrays(GL_POINTS, l_cdy, l_csy);
               }
           }
@@ -482,6 +497,38 @@ void  gl_render_base::gfx_reset_scene_geometry(int px0, int py0, int px1, int py
       m_scene_py0 = py0;
       m_scene_px1 = px1;
       m_scene_py1 = py1;
+}
+
+void  gl_render_base::gfx_reset_background_colour(float a, float r, float g, float b) noexcept
+{
+      m_background_colour[0] = r;
+      m_background_colour[1] = g;
+      m_background_colour[2] = b;
+      m_background_colour[3] = a;
+}
+
+void  gl_render_base::gfx_reset_background_colour(int a, int r, int g, int b) noexcept
+{
+      m_background_colour[0] = static_cast<float>(r) / 255.0f;
+      m_background_colour[1] = static_cast<float>(g) / 255.0f;
+      m_background_colour[2] = static_cast<float>(b) / 255.0f;
+      m_background_colour[3] = static_cast<float>(a) / 255.0f;
+}
+
+void  gl_render_base::gfx_reset_foreground_colour(float a, float r, float g, float b) noexcept
+{
+      m_foreground_colour[0] = r;
+      m_foreground_colour[1] = g;
+      m_foreground_colour[2] = b;
+      m_foreground_colour[3] = a;
+}
+
+void  gl_render_base::gfx_reset_foreground_colour(int a, int r, int g, int b) noexcept
+{
+      m_foreground_colour[0] = static_cast<float>(r) / 255.0f;
+      m_foreground_colour[1] = static_cast<float>(g) / 255.0f;
+      m_foreground_colour[2] = static_cast<float>(b) / 255.0f;
+      m_foreground_colour[3] = static_cast<float>(a) / 255.0f;
 }
 
 void  gl_render_base::gfx_update_device() noexcept
