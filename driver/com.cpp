@@ -28,7 +28,7 @@
 
 namespace gfx {
 
-#ifdef UNIX
+#ifdef LINUX
 static constexpr int file_read_size = os::filesystem_block_size;
 #endif
 
@@ -192,6 +192,7 @@ bool  com::cso_load_ptr(cso& cso, std::uint8_t* data, unsigned int format, int s
 */
 bool  com::cso_load_resource(cso& cso, const char* file_name, unsigned int format, int sx, int sy) noexcept
 {
+#ifdef LINUX
       if constexpr (os::is_unix) {
           if(bool
               l_reset_success = cso.reset(format, sx, sy);
@@ -226,6 +227,7 @@ bool  com::cso_load_resource(cso& cso, const char* file_name, unsigned int forma
               }
           }
       }
+#endif
       return false;
 }
 
