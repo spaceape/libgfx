@@ -35,11 +35,5 @@ class driver;
 class device;
 class surface;
 
-/* driver_slot_count_*
-   limits on how many drivers can a device shall link in at the same time 
-*/
-constexpr int     driver_slot_count_min = 1;
-constexpr int     driver_slot_count_max = 8;
-
 /*namespace gfx*/ }
 #endif

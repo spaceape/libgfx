@@ -25,14 +25,6 @@
 
 namespace gfx {
 
-/* driver_slot_count
-   how many drivers can a device link in at the same time 
-*/
-constexpr int     driver_slot_count = 4;
-
-static_assert(driver_slot_count >= driver_slot_count_min, "a device needs to support at least driver_slot_count_min driver slots.");
-static_assert(driver_slot_count <= driver_slot_count_max, "a device can support at most driver_slot_count_max driver slots.");
-
 /* support_tile_graphics
 */
 constexpr bool    support_tile_graphics = true;

@@ -30,11 +30,11 @@
 
 namespace gfx {
 
-      bool(*dc::gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept = com::cmo_load_preset;
-      bool(*dc::gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept = com::cmo_load_resource;
-      bool(*dc::gfx_cso_load_ptr)(cso&, std::uint8_t*, unsigned int, int, int) noexcept = com::cso_load_ptr;
-      bool(*dc::gfx_cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept = com::cso_load_resource;
-      bool(*dc::gfx_pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept = com::pbo_load_resource;
+      bool(*dc::gfx_cmo_load_preset)(gfx::cmo&, int, unsigned int, int) noexcept = gfx::com::cmo_load_preset;
+      bool(*dc::gfx_cmo_load_resource)(gfx::cmo&, const char*, unsigned int, int) noexcept = gfx::com::cmo_load_resource;
+      bool(*dc::gfx_cso_load_ptr)(gfx::cso&, std::uint8_t*, unsigned int, int, int) noexcept = gfx::com::cso_load_ptr;
+      bool(*dc::gfx_cso_load_resource)(gfx::cso&, const char*, unsigned int, int, int) noexcept = gfx::com::cso_load_resource;
+      bool(*dc::gfx_pbo_load_resource)(gfx::pbo&, const char*, unsigned int, int, int) noexcept = gfx::com::pbo_load_resource;
 
       dc::dc() noexcept
 {

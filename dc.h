@@ -106,9 +106,6 @@ struct dc: public ac
       mapping_base_t* mapping_ptr;
   };
 
-  // static  surface*        gfx_surface_ptr;
-  // static  mapping_base_t* gfx_mapping_ptr;
-
   protected:
   static  bool(*gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept;
   static  bool(*gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept;

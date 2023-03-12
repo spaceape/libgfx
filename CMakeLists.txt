@@ -39,8 +39,6 @@ set(common_srcs
   
   driver/hmm.cpp driver/com.cpp
 
-  support/sw_render_base.cpp
-
   surface.cpp device.cpp
 
   gfx.cpp
