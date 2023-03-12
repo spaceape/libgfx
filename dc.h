@@ -136,6 +136,7 @@ struct dc: public ac
 
   static  void      gfx_push_device(de&, device*) noexcept;
   static  void      gfx_push_surface(se&, surface*, mapping_base_t* = nullptr) noexcept;
+  static  auto      gfx_get_device() noexcept -> device*;
   static  void      gfx_pop_surface(se&) noexcept;
   static  void      gfx_pop_device(de&) noexcept;
 

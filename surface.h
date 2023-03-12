@@ -74,7 +74,7 @@ class surface: public dc
   virtual bool  gfx_attach_surface(surface*) noexcept;
   virtual bool  gfx_detach_surface(surface*) noexcept;
   virtual void  gfx_draw() noexcept;
-  virtual void  gfx_sync(int) noexcept;
+  virtual void  gfx_sync(float) noexcept;
   virtual bool  gfx_release(device*) noexcept;
 
   friend class device;

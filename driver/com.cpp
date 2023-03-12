@@ -39,7 +39,7 @@ static void cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, i
 {
       switch(format) {
         case fmt_rgb_121:
-            a_bits = 1;
+            a_bits = 0;
             r_bits = 1;
             g_bits = 2;
             b_bits = 1;

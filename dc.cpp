@@ -233,6 +233,11 @@ void  dc::gfx_push_surface(se& restore_cb, surface* surface_ptr, mapping_base_t*
       }
 }
 
+auto  dc::gfx_get_device() noexcept -> device*
+{
+      return gfx_display_ptr;
+}
+
 void  dc::gfx_pop_surface(se& restore_cb) noexcept
 {
       gfx_mapping_ptr = restore_cb.mapping_ptr;
