@@ -106,9 +106,6 @@ struct dc: public ac
       mapping_base_t* mapping_ptr;
   };
 
-  // static  surface*        gfx_surface_ptr;
-  // static  mapping_base_t* gfx_mapping_ptr;
-
   protected:
   static  bool(*gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept;
   static  bool(*gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept;
@@ -136,6 +133,7 @@ struct dc: public ac
 
   static  void      gfx_push_device(de&, device*) noexcept;
   static  void      gfx_push_surface(se&, surface*, mapping_base_t* = nullptr) noexcept;
+  static  auto      gfx_get_device() noexcept -> device*;
   static  void      gfx_pop_surface(se&) noexcept;
   static  void      gfx_pop_device(de&) noexcept;
 

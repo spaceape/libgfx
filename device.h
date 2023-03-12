@@ -72,7 +72,7 @@ class device: public surface
           auto   gfx_find_mapping(surface*) noexcept -> mapping_base_t*;
   virtual bool   gfx_detach_surface(surface*) noexcept override;
           void   gfx_render() noexcept;
-  virtual void   gfx_sync(int) noexcept override;
+  virtual void   gfx_sync(float) noexcept override;
 
   friend class dc;
   public:

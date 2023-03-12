@@ -72,7 +72,7 @@ void  surface::gfx_draw() noexcept
 }
 
 
-void  surface::gfx_sync(int) noexcept
+void  surface::gfx_sync(float) noexcept
 {
 }
 

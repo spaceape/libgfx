@@ -29,7 +29,9 @@
 namespace gfx {
 
       device::device() noexcept:
-      surface(true, false)
+      surface(true, false),
+      m_device_cmo(),
+      m_device_cso()
 {
 }
 
@@ -83,8 +85,7 @@ bool  device::gdd_reset_mapping_cmo(surface*, mapping_base_t* mapping_ptr) noexc
       auto   l_format = mapping_ptr->format;
       int    l_colour_count = mapping_ptr->cc;
       bool   l_cmo_success = true;
-      if((l_cmo.has_format(l_format) == false) ||
-          (l_cmo.has_colour_count(l_colour_count) == false)) {
+      if(l_cmo.has_colour_count(l_colour_count) == false) {
           l_cmo_success = l_cmo.reset(l_format, l_colour_count);
       } else
           l_cmo = m_device_cmo;
@@ -392,11 +393,9 @@ void  device::gfx_render() noexcept
       }
 }
 
-void  device::gfx_sync(int dt) noexcept
+void  device::gfx_sync(float dt) noexcept
 {
-      if(dt > 0) {
-          gfx_render();
-      }
+      gfx_render();
 }
 
 bool  device::map(surface* surface_ptr, int px, int py, int sx, int sy) noexcept
