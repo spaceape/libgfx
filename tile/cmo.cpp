@@ -376,7 +376,7 @@ bool  cmo::set_uint32(int index, std::uint8_t a, std::uint8_t r, std::uint8_t g,
                 if constexpr (os::is_lsb) {
                     p_colour[0] =
                         ((b & 0b11111000) >> 3) |
-                        ((g & 0b00011100) << 2);
+                        ((g & 0b00011100) << 3);
                     p_colour[1] =
                         ((g & 0b11100000) >> 5) |
                         (r & 0b11111000);

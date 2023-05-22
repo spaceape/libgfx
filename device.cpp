@@ -142,20 +142,26 @@ void  device::gdd_reset_mapping_geometry(surface*, mapping_base_t*) noexcept
 {
 }
 
-/* gdd_reset_rendering_context()
-   call onto the driver to set up the rendering context (if any), before the rendering loop
-*/
-bool  device::gdd_reset_rendering_context() noexcept
-{
-      return true;
-}
+// /* gdd_reset_rendering_context()
+//    call onto the driver to set up the rendering context (if any), before the rendering loop
+// */
+// bool  device::gdd_reset_rendering_context()
+// {
+//       return true;
+// }
 
-/* gdd_unset_rendering_context()
-   call onto the driver to free the rendering context (if any), after the rendering loop has ran
-*/
-void  device::gdd_unset_rendering_context() noexcept
-{
-}
+// /* gdd_render()
+// */
+// void  device::gdd_render(surface*, mapping_base_t*)
+// {
+// }
+
+// /* gdd_unset_rendering_context()
+//    call onto the driver to free the rendering context (if any), after the rendering loop has ran
+// */
+// void  device::gdd_unset_rendering_context()
+// {
+// }
 
 /* gdd_free_mapping()
    call onto the device driver to deallocate a mapping object
@@ -393,7 +399,7 @@ void  device::gfx_render() noexcept
       }
 }
 
-void  device::gfx_sync(float dt) noexcept
+void  device::gfx_sync(float) noexcept
 {
       gfx_render();
 }

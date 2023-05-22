@@ -50,9 +50,9 @@ class device: public surface
   virtual bool   gdd_reset_mapping_cso(surface*, mapping_base_t*, int) noexcept;
   virtual void   gdd_reset_window_geometry(surface*, mapping_base_t*) noexcept;
   virtual void   gdd_reset_mapping_geometry(surface*, mapping_base_t*) noexcept;
-  virtual bool   gdd_reset_rendering_context() noexcept;
-  virtual void   gdd_render(surface*, mapping_base_t*) noexcept = 0;
-  virtual void   gdd_unset_rendering_context() noexcept;
+  virtual bool   gdd_reset_rendering_context() = 0;
+  virtual void   gdd_render(surface*, mapping_base_t*) = 0;
+  virtual void   gdd_unset_rendering_context() = 0;
   virtual void   gdd_free_mapping(surface*, mapping_base_t*) noexcept;
 
   private:  
