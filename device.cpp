@@ -1,5 +1,5 @@
 /** 
-    Copyright (c) 2021, wicked systems
+    Copyright (c) 2023, wicked systems
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
@@ -141,27 +141,6 @@ void  device::gdd_reset_window_geometry(surface*, mapping_base_t*) noexcept
 void  device::gdd_reset_mapping_geometry(surface*, mapping_base_t*) noexcept
 {
 }
-
-// /* gdd_reset_rendering_context()
-//    call onto the driver to set up the rendering context (if any), before the rendering loop
-// */
-// bool  device::gdd_reset_rendering_context()
-// {
-//       return true;
-// }
-
-// /* gdd_render()
-// */
-// void  device::gdd_render(surface*, mapping_base_t*)
-// {
-// }
-
-// /* gdd_unset_rendering_context()
-//    call onto the driver to free the rendering context (if any), after the rendering loop has ran
-// */
-// void  device::gdd_unset_rendering_context()
-// {
-// }
 
 /* gdd_free_mapping()
    call onto the device driver to deallocate a mapping object
