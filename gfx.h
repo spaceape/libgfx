@@ -1,5 +1,5 @@
-#ifndef gfx_interface_h
-#define gfx_interface_h
+#ifndef gfx_h
+#define gfx_h
 /** 
     Copyright (c) 2020, wicked systems
     All rights reserved.
