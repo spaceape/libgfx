@@ -131,6 +131,68 @@ bool  dc::gfx_set_window_size(int sx, int sy) noexcept
       return false;
 }
 
+/* gfx_get_cmo()
+*/
+bool  dc::gfx_get_cmo(cmo& cm) noexcept
+{
+      if(gfx_surface_ptr->is_mapped()) {
+          return gfx_display_ptr->get_cmo(gfx_surface_ptr, cm);
+      } else
+      if(gfx_mapping_ptr != nullptr) {
+          cm = gfx_mapping_ptr->cm;
+          return true;
+      }
+      return false;
+}
+
+/* gfx_set_cmo()
+*/
+bool  dc::gfx_set_cmo(const cmo& cm) noexcept
+{
+      if(gfx_surface_ptr->is_mapped()) {
+          return gfx_display_ptr->set_cmo(gfx_surface_ptr, cm);
+      } else
+      if(gfx_mapping_ptr != nullptr) {
+          gfx_mapping_ptr->cm = cm;
+          return true;
+      }
+      return false;
+}
+
+/* gfx_get_cso()
+*/
+bool  dc::gfx_get_cso(int index, cso& cs) noexcept
+{
+      if(gfx_surface_ptr->is_mapped()) {
+          return gfx_display_ptr->get_cso(gfx_surface_ptr, index, cs);
+      } else
+      if(gfx_mapping_ptr != nullptr) {
+          if((index >= 0) &&
+              (index < charset_count)) {
+              cs = gfx_mapping_ptr->cs[index];
+              return true;
+          }
+      }
+      return false;
+}
+
+/* gfx_set_cso()
+*/
+bool  dc::gfx_set_cso(int index, const cso& cs) noexcept
+{
+      if(gfx_surface_ptr->is_mapped()) {
+          return gfx_display_ptr->set_cso(gfx_surface_ptr, index, cs);
+      } else
+      if(gfx_mapping_ptr != nullptr) {
+          if((index >= 0) &&
+              (index < charset_count)) {
+              gfx_mapping_ptr->cs[index] = cs;
+              return true;
+          }
+      }
+      return false;
+}
+
 /* gfx_get_lb_ptr()
    get a pointer to the 'low byte' segment of the screen buffer (see gfx/tile.h)
 */

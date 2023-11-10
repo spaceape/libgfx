@@ -71,6 +71,8 @@ class surface: public dc
 
   protected:
   virtual bool  gfx_prepare(device*) noexcept;
+  virtual void  gfx_reset_cbo(cbo&, int, int) noexcept;
+  virtual void  gfx_reset_pbo(pbo&, int, int) noexcept;
   virtual bool  gfx_attach_surface(surface*) noexcept;
   virtual bool  gfx_detach_surface(surface*) noexcept;
   virtual void  gfx_draw() noexcept;

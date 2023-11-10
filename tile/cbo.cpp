@@ -130,6 +130,13 @@ bool  cbo::reset(unsigned int format, int sx, int sy, std::uint8_t* data, std::s
       return false;
 }
 
+void  cbo::clear(std::uint8_t value) noexcept
+{
+      if(m_data) {
+          std::memset(m_data, value, m_size);
+      }
+}
+
 void  cbo::dispose() noexcept
 {
       if(m_data) {

@@ -57,6 +57,14 @@ bool  surface::gfx_prepare(device*) noexcept
       return true;
 }
 
+void  surface::gfx_reset_cbo(cbo&, int, int) noexcept
+{
+}
+
+void  surface::gfx_reset_pbo(pbo&, int, int) noexcept
+{
+}
+
 bool  surface::gfx_attach_surface(surface*) noexcept
 {
       return true;

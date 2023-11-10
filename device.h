@@ -39,6 +39,8 @@ class device: public surface
 
   private:
           bool   gdx_prepare_surface(surface*, mapping_base_t*) noexcept;
+          void   gdx_reset_surface_cbo(surface*, mapping_base_t*, int, int) noexcept;
+          void   gdx_reset_surface_pbo(surface*, mapping_base_t*, int, int) noexcept;
           void   gdx_render_surface(surface*) noexcept;
           bool   gdx_release_surface(surface*, mapping_base_t*) noexcept;
 
@@ -88,7 +90,9 @@ class device: public surface
           void   set_render_flags(surface*, unsigned int) noexcept;
           bool   set_window_size(surface*, int, int) noexcept;
 
+          bool   get_cmo(surface*, cmo&) const noexcept;
           bool   set_cmo(surface*, const cmo&) noexcept;
+          bool   get_cso(surface*, int, cso&) const noexcept;
           bool   set_cso(surface*, int, const cso&) noexcept;
 
           std::uint8_t*  get_lb_ptr(surface*) const noexcept;

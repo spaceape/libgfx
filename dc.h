@@ -119,6 +119,11 @@ struct dc: public ac
   static  void      gfx_set_render_flags(unsigned int) noexcept;
   static  bool      gfx_set_window_size(int, int) noexcept;
 
+  static  bool      gfx_get_cmo(cmo&) noexcept;
+  static  bool      gfx_set_cmo(const cmo&) noexcept;
+  static  bool      gfx_get_cso(int, cso&) noexcept;
+  static  bool      gfx_set_cso(int, const cso&) noexcept;
+
   static  uint8_t*  gfx_get_lb_ptr() noexcept;
   static  uint8_t*  gfx_get_lb_ptr(int, int = 0) noexcept;
   static  uint8_t*  gfx_get_hb_ptr() noexcept;

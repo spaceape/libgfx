@@ -80,6 +80,7 @@ class cbo: public ac
           bool  clone(const cbo&) noexcept;
           bool  reset(unsigned int, int, int) noexcept;
           bool  reset(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+          void  clear(std::uint8_t = 0) noexcept;
           void  dispose() noexcept;
           void  release() noexcept;
   
