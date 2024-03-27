@@ -30,13 +30,14 @@ namespace gfx {
  * [ ---- ---- ----  FF-- ]
  * 
  * Encoding of the character buffer:
- * LB:  [ C7 C6 C5 C4 C3 C2 C1 C0 ]
- * HB:  [ -- -- Z1 Z0 -- CA C9 C8 ]
+ * LB:  [ S0 C6 C5 C4 C3 C2 C1 C0 ]
+ * HB:  [ -- -- Z1 Z0 -- S3 S2 S1 ]
  * XB0: [ B7 B6 B5 B4 B3 B2 B1 B0 ]
  * XB1: [ F7 F6 F5 F4 F3 F2 F1 F0 ]
  * 
  * Where:
  * Cx - character index
+ * Sx - charset index
  * Bx - background colour index
  * Fx - foreground colour index
  * Zx - fusion mode: 8x8 and 16x16 tile size only

@@ -51,6 +51,26 @@ bool  device::gdx_prepare_surface(surface* surface_ptr, mapping_base_t* mapping_
       return l_result;
 }
 
+void  device::gdx_reset_surface_cbo(surface* surface_ptr, mapping_base_t* mapping_ptr, int cx, int cy) noexcept
+{
+      se   l_surface_restore_cb;
+      if(surface_ptr->m_allow_callbacks) {
+          gfx_push_surface(l_surface_restore_cb, surface_ptr, mapping_ptr);
+          surface_ptr->gfx_reset_cbo(mapping_ptr->cb, cx, cy);
+          gfx_pop_surface(l_surface_restore_cb);
+      }
+}
+
+void  device::gdx_reset_surface_pbo(surface* surface_ptr, mapping_base_t* mapping_ptr, int sx, int sy) noexcept
+{
+      se   l_surface_restore_cb;
+      if(surface_ptr->m_allow_callbacks) {
+          gfx_push_surface(l_surface_restore_cb, surface_ptr, mapping_ptr);
+          surface_ptr->gfx_reset_pbo(mapping_ptr->pb, sx, sy);
+          gfx_pop_surface(l_surface_restore_cb);
+      }
+}
+
 void  device::gdx_render_surface(surface* surface_ptr) noexcept
 {
       surface_ptr->gfx_draw();
@@ -95,13 +115,14 @@ bool  device::gdd_reset_mapping_cmo(surface*, mapping_base_t* mapping_ptr) noexc
 /* gdd_reset_mapping_cbo()
    call onto the device driver to set the character buffer to the specified geometry (in characters)
 */
-bool  device::gdd_reset_mapping_cbo(surface*, mapping_base_t* mapping_ptr, int cx, int cy) noexcept
+bool  device::gdd_reset_mapping_cbo(surface* surface_ptr, mapping_base_t* mapping_ptr, int cx, int cy) noexcept
 {
       auto&  l_cbo = mapping_ptr->cb;
       auto   l_format = mapping_ptr->format;
       if(bool
           l_cbo_success = l_cbo.reset(l_format, cx, cy);
           l_cbo_success == true) {
+          gdx_reset_surface_cbo(surface_ptr, mapping_ptr, cx, cy);
           return true;
       }
       return false;
@@ -110,13 +131,14 @@ bool  device::gdd_reset_mapping_cbo(surface*, mapping_base_t* mapping_ptr, int c
 /* gdd_reset_mapping_pbo()
    call onto the device driver to set the pixel buffer to the specified geometry (in pixels)
 */
-bool  device::gdd_reset_mapping_pbo(surface*, mapping_base_t* mapping_ptr, int sx, int sy) noexcept
+bool  device::gdd_reset_mapping_pbo(surface* surface_ptr, mapping_base_t* mapping_ptr, int sx, int sy) noexcept
 {
       auto&  l_pbo    = mapping_ptr->pb;
       auto   l_format = fmt_indexed;
       if(bool
           l_pbo_success = l_pbo.reset(l_format, sx, sy);
           l_pbo_success == true) {
+          gdx_reset_surface_pbo(surface_ptr, mapping_ptr, sx, sy);
           return true;
       }
       return false;
@@ -125,8 +147,11 @@ bool  device::gdd_reset_mapping_pbo(surface*, mapping_base_t* mapping_ptr, int s
 /* gdd_reset_mapping_cso()
    call onto the device driver to setup the character set specified by `index`
 */
-bool  device::gdd_reset_mapping_cso(surface*, mapping_base_t*, int) noexcept
+bool  device::gdd_reset_mapping_cso(surface*, mapping_base_t* mapping_ptr, int index) noexcept
 {
+      if(index == 0) {
+          mapping_ptr->cs[index] = m_device_cso;
+      }
       return true;
 }
 
@@ -170,21 +195,19 @@ auto  device::gdr_make_mapping(surface* surface_ptr) noexcept -> mapping_base_t*
           p_mapping->gsy = m_device_cso.get_glyph_sy();
           p_mapping->cc = m_device_cmo.get_colour_count();
           p_mapping->cm = m_device_cmo;
-          p_mapping->cs[0] = m_device_cso;
           p_mapping->wsa = true;
           p_mapping->valid_bit = false;
           p_mapping->ready_bit = false;
+          // set up any defined charsets
+          for(int i_cso = 0; i_cso < charset_count; i_cso++) {
+              gdd_reset_mapping_cso(surface_ptr, p_mapping, i_cso);
+          }
+          // call the preparation handles
           if(bool
               l_prepare_success = gdx_prepare_surface(surface_ptr, p_mapping);
               l_prepare_success == false) {
               gdd_free_mapping(surface_ptr, p_mapping);
               return nullptr;
-          }
-          // set up any defined charsets
-          for(int i_cso = 0; i_cso < charset_count; i_cso++) {
-              if(p_mapping->cs[i_cso]) {
-                  gdd_reset_mapping_cso(surface_ptr, p_mapping, i_cso);
-              }
           }
           surface_ptr->m_mid = p_mapping;
       }
@@ -203,6 +226,13 @@ void  device::gdr_reset_mapping(surface* surface_ptr, mapping_base_t* mapping_pt
       if(mapping_ptr->option_flags & surface::opt_graphics_flags) {
           if((mapping_ptr->wsx > 0) &&
               (mapping_ptr->wsy > 0)) {
+              if((mapping_ptr->format & mode_tile) ||
+                  (mapping_ptr->format & mode_indexed)) {
+                  l_cmo_rq = true;
+                  if(mapping_ptr->cc > palette_size_min) {
+                      l_cmo_up = gdd_reset_mapping_cmo(surface_ptr, mapping_ptr);
+                  }
+              }
               if(mapping_ptr->option_flags & surface::opt_request_tile_graphics) {
                   if((mapping_ptr->gsx >= glyph_sx_min) &&
                       (mapping_ptr->gsy >= glyph_sy_min)) {
@@ -217,13 +247,6 @@ void  device::gdr_reset_mapping(surface* surface_ptr, mapping_base_t* mapping_pt
                   l_pbo_up = gdd_reset_mapping_pbo(surface_ptr, mapping_ptr, mapping_ptr->wsx, mapping_ptr->wsy);
                   l_pbo_rq = true;
                   l_render_bit |= true;
-              }
-              if((mapping_ptr->format & mode_tile) ||
-                  (mapping_ptr->format & mode_indexed)) {
-                  l_cmo_rq = true;
-                  if(mapping_ptr->cc > palette_size_min) {
-                      l_cmo_up = gdd_reset_mapping_cmo(surface_ptr, mapping_ptr);
-                  }
               }
           }
       }
@@ -482,6 +505,56 @@ bool  device::set_window_size(surface* surface_ptr, int sx, int sy) noexcept
           p_mapping != nullptr) {
           gdr_reset_window_geometry(surface_ptr, p_mapping, sx, sy);
           return true;
+      }
+      return false;
+}
+
+bool  device::get_cmo(surface* surface_ptr, cmo& cm) const noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          cm = p_mapping->cm;
+          return true;
+      }
+      return false;
+}
+
+bool  device::set_cmo(surface* surface_ptr, const cmo& cm) noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          p_mapping->cm = cm;
+          return true;
+      }
+      return false;
+}
+
+bool  device::get_cso(surface* surface_ptr, int index, cso& cs) const noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          if((index >= 0) &&
+              (index < charset_count)) {
+              cs = p_mapping->cs[index];
+              return true;
+          }
+      }
+      return false;
+}
+
+bool  device::set_cso(surface* surface_ptr, int index, const cso& cs) noexcept
+{
+      if(mapping_base_t*
+          p_mapping = static_cast<mapping_base_t*>(surface_ptr->m_mid);
+          p_mapping != nullptr) {
+          if((index >= 0) &&
+              (index < charset_count)) {
+              p_mapping->cs[index] = cs;
+              return true;
+          }
       }
       return false;
 }
