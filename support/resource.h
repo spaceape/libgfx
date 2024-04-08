@@ -1,7 +1,7 @@
-#ifndef gfx_com_driver_h
-#define gfx_com_driver_h
+#ifndef gfx_support_resource_h
+#define gfx_support_resource_h
 /** 
-    Copyright (c) 2022, wicked systems
+    Copyright (c) 2024, wicked systems
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
@@ -22,32 +22,17 @@
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 #include <gfx.h>
-#include <gfx/driver.h>
+#include <gfx/dc.h>
 
 namespace gfx {
+namespace resource {
 
-/* com
- * provides gfx with basic access to resources in a platform-independent way
-*/
-class com: public driver
-{
-  public:
-  static  bool  cmo_load_preset(cmo&, int, unsigned int, int) noexcept;
-  static  bool  cmo_load_resource(cmo&, const char*, unsigned int, int) noexcept;
-  static  bool  cso_load_ptr(cso&, std::uint8_t*, unsigned int, int, int) noexcept;
-  static  bool  cso_load_resource(cso&, const char*, unsigned int, int, int) noexcept;
-  static  bool  pbo_load_resource(pbo&, const char*, unsigned int, int, int) noexcept;
+bool  cmo_load_preset(cmo&, int, unsigned int, int) noexcept;
+bool  cmo_load_resource(cmo&, const char*, unsigned int, int) noexcept;
+bool  cso_load_ptr(cso&, std::uint8_t*, unsigned int, int, int) noexcept;
+bool  cso_load_resource(cso&, const char*, unsigned int, int, int) noexcept;
+bool  pbo_load_resource(pbo&, const char*, unsigned int, int, int) noexcept;
   
-  public:
-          com() noexcept;
-          com(const com&) noexcept;
-          com(com&&) noexcept;
-
-  static  void load() noexcept;
-
-          com& operator=(const com&) noexcept;
-          com& operator=(com&&) noexcept;
-};
-  
+/*namespace resource*/ }
 /*namespace gfx*/ }
 #endif

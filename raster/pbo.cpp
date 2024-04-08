@@ -31,13 +31,13 @@ namespace gfx {
 {
 }
 
-      pbo::pbo(unsigned int format, int sx, int sy) noexcept:
+      pbo::pbo(std::uint16_t format, int sx, int sy) noexcept:
       pbo()
 {
       reset(format, sx, sy);
 }
 
-      pbo::pbo(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
+      pbo::pbo(std::uint16_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
       pbo()
 {
       reset(format, sx, sy, data, size);
@@ -71,13 +71,13 @@ namespace gfx {
 {
 }
 
-      pbo::ref::ref(unsigned int format, int sx, int sy) noexcept:
+      pbo::ref::ref(std::uint16_t format, int sx, int sy) noexcept:
       ref()
 {
       reset(format, sx, sy);
 }
 
-      pbo::ref::ref(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
+      pbo::ref::ref(std::uint16_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
       ref()
 {
       reset(format, sx, sy, data, size);
@@ -106,7 +106,7 @@ void  pbo::ref::reset() noexcept
       }
 }
 
-bool  pbo::ref::reset(unsigned int format, int sx, int sy) noexcept
+bool  pbo::ref::reset(std::uint16_t format, int sx, int sy) noexcept
 {
       reset();
       if((sx < 0) || (sx > std::numeric_limits<std::int16_t>::max())) {
@@ -126,7 +126,7 @@ bool  pbo::ref::reset(unsigned int format, int sx, int sy) noexcept
       return true;
 }
 
-bool  pbo::ref::reset(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
+bool  pbo::ref::reset(std::uint16_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
 {
       reset();
       if((sx < 0) || (sx > std::numeric_limits<std::int16_t>::max())) {
@@ -278,30 +278,46 @@ pbo::ptr&  pbo::ptr::operator=(ptr&& rhs) noexcept
       return *this;
 }
 
-bool  pbo::reset() noexcept
+auto  pbo::get_format() const noexcept -> std::uint16_t
 {
-      m_ptr.release();
-      return true;
+      return m_ptr->get_format();
 }
 
-bool  pbo::reset(unsigned int format, int sx, int sy) noexcept
+auto  pbo::get_sx() const noexcept -> std::uint16_t
+{
+      return m_ptr->get_sx();
+}
+
+auto  pbo::get_sy() const noexcept -> std::uint16_t
+{
+      return m_ptr->get_sy();
+}
+
+void  pbo::reset() noexcept
+{
+      m_ptr.release();
+}
+
+bool  pbo::reset(std::uint16_t format, int sx, int sy) noexcept
 {
       if((sx > 0) &&
           (sy > 0)) {
           return m_ptr = make_ptr(format, sx, sy);
-      } else
-          return reset();
+      }
+      reset();
+      return false;
 }
 
-bool  pbo::reset(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
+bool  pbo::reset(std::uint16_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
 {
       if((sx > 0) &&
           (sy > 0) &&
           (data != nullptr) &&
           (size > 0)) {
           return m_ptr = make_ptr(format, sx, sy, data, size);
-      } else
-          return reset();
+      }
+      reset();
+      return false;
 }
 
 void  pbo::dispose() noexcept
@@ -314,7 +330,7 @@ void  pbo::release() noexcept
       m_ptr.release();
 }
 
-std::uint8_t* pbo::get_data_ptr() const noexcept
+auto  pbo::get_data_ptr() const noexcept -> std::uint8_t*
 {
       if(m_ptr) {
           return m_ptr->get_data();

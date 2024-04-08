@@ -25,15 +25,48 @@
 
 namespace gfx {
 
-class ac;
-class dc;
-class cmo;
-class cso;
-class cbo;
-class pbo;
-class driver;
-class device;
-class surface;
+class  ac;
+class  dc;
+class  cmo;
+class  cso;
+class  cbo;
+class  pbo;
+
+typedef void(*pbo_blit_t)(const std::uint8_t*, int, int, int, int) noexcept;
+typedef void(*pbo_fill_t)(std::uint32_t, int, int, int, int) noexcept;
+
+struct ctx_t
+{
+  ctx_t*        r_root;
+
+  std::uint8_t* r_target_ptr;
+  std::uint16_t r_target_format;
+  int           r_target_sx;
+  int           r_target_sy;
+
+  int           r_surface_px;
+  int           r_surface_py;
+  int           r_surface_sx;
+  int           r_surface_sy;
+
+  int           r_cursor_px;
+  int           r_cursor_py;
+
+  std::uint8_t* r_charset_ptr;
+  std::uint16_t r_charset_format;
+
+  int           r_glyph_dx;
+  int           r_glyph_fbx;
+  int           r_glyph_rbx;
+  int           r_glyph_sx;
+  int           r_glyph_sy;
+
+  int           r_charset_base;
+  int           r_charset_size;
+
+  pbo_blit_t    r_pbo_blit;
+  pbo_fill_t    r_pbo_fill;
+};
 
 /*namespace gfx*/ }
 #endif

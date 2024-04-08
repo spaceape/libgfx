@@ -1,5 +1,5 @@
 # gfx
-Compact graphics engine for microcontroller development.
+Compact graphics engine for microcontroller development - abridged version
 
 # 1. Description
 

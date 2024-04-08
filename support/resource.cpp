@@ -1,5 +1,5 @@
 /** 
-    Copyright (c) 2022, wicked systems
+    Copyright (c) 2024, wicked systems
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
@@ -19,7 +19,7 @@
     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-#include "com.h"
+#include "resource.h"
 #include <os.h>
 #include <cstdlib>
 #include <cstring>
@@ -27,6 +27,7 @@
 #include <unistd.h>
 
 namespace gfx {
+namespace resource {
 
 #ifdef LINUX
 static constexpr int file_read_size = os::filesystem_block_size;
@@ -35,7 +36,7 @@ static constexpr int file_read_size = os::filesystem_block_size;
 /* cmo_get_colour_bits()
    read the format argument and return the number of bits in each colour channel
 */
-static void cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, int& g_bits, int& b_bits) noexcept
+static void  cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, int& g_bits, int& b_bits) noexcept
 {
       switch(format) {
         case fmt_rgb_121:
@@ -128,19 +129,7 @@ static void cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, i
 //       return 0;
 // }
 
-      com::com() noexcept
-{
-}
-
-      com::com(const com&) noexcept
-{
-}
-
-      com::com(com&&) noexcept
-{
-}
-
-bool  com::cmo_load_preset(cmo& cmo, int preset, unsigned int format, int colour_count) noexcept
+bool  cmo_load_preset(cmo& cmo, int preset, unsigned int format, int colour_count) noexcept
 {
       int l_a_bits;
       int l_r_bits;
@@ -178,19 +167,19 @@ bool  com::cmo_load_preset(cmo& cmo, int preset, unsigned int format, int colour
 
 /* cmo_load()
 */
-bool  com::cmo_load_resource(cmo&, const char*, unsigned int, int) noexcept
+bool  cmo_load_resource(cmo&, const char*, unsigned int, int) noexcept
 {
       return false;
 }
 
-bool  com::cso_load_ptr(cso& cso, std::uint8_t* data, unsigned int format, int sx, int sy) noexcept
+bool  cso_load_ptr(cso& cso, std::uint8_t* data, unsigned int format, int sx, int sy) noexcept
 {
       return cso.reset(format, sx, sy, data, cso::get_data_size(format, sx, sy));
 }
 
 /* cso_load()
 */
-bool  com::cso_load_resource(cso& cso, const char* file_name, unsigned int format, int sx, int sy) noexcept
+bool  cso_load_resource(cso& cso, const char* file_name, unsigned int format, int sx, int sy) noexcept
 {
 #ifdef LINUX
       if constexpr (os::is_unix) {
@@ -233,7 +222,7 @@ bool  com::cso_load_resource(cso& cso, const char* file_name, unsigned int forma
 
 /* pbo_load()
 */
-bool  com::pbo_load_resource(pbo& pbo, const char* file_name, unsigned int format, int sx, int sy) noexcept
+bool  pbo_load_resource(pbo& pbo, const char* file_name, unsigned int format, int sx, int sy) noexcept
 {
 #ifdef UNIX
       if(bool
@@ -272,26 +261,5 @@ bool  com::pbo_load_resource(pbo& pbo, const char* file_name, unsigned int forma
       return false;
 }
 
-/* load()
-   import the driver functions into the current context
-*/
-void  com::load() noexcept
-{
-      gfx_cmo_load_preset   = cmo_load_preset;
-      gfx_cmo_load_resource = cmo_load_resource;
-      gfx_cso_load_ptr = cso_load_ptr;
-      gfx_cso_load_resource = cso_load_resource;
-      gfx_pbo_load_resource = pbo_load_resource;
-}
-
-com&  com::operator=(const com&) noexcept
-{
-      return *this;
-}
-
-com&  com::operator=(com&&) noexcept
-{
-      return *this;
-}
-
+/*namespace resource*/ }
 /*namespace gfx*/ }

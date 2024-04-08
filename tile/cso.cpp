@@ -30,13 +30,13 @@ namespace gfx {
 {
 }
 
-      cso::cso(unsigned int format, int sx, int sy) noexcept:
+      cso::cso(std::uint8_t format, int sx, int sy) noexcept:
       cso()
 {
       reset(format, sx, sy);
 }
 
-      cso::cso(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
+      cso::cso(std::uint8_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
       cso()
 {
       reset(format, sx, sy, data, size);
@@ -71,13 +71,13 @@ namespace gfx {
 {
 }
 
-      cso::ref::ref(unsigned int format, int sx, int sy) noexcept:
+      cso::ref::ref(std::uint8_t format, int sx, int sy) noexcept:
       ref()
 {
       reset(format, sx, sy);
 }
 
-      cso::ref::ref(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
+      cso::ref::ref(std::uint8_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept:
       ref()
 {
       reset(format, sx, sy, data, size);
@@ -88,7 +88,7 @@ namespace gfx {
       reset();
 }
 
-unsigned int cso::ref::get_format() const noexcept
+std::uint8_t cso::ref::get_format() const noexcept
 {
       return m_format;
 }
@@ -124,7 +124,7 @@ void  cso::ref::reset() noexcept
       }
 }
 
-bool  cso::ref::reset(unsigned int format, int sx, int sy) noexcept
+bool  cso::ref::reset(std::uint8_t format, int sx, int sy) noexcept
 {
       reset();
       if((sx < glyph_sx_min) || (sx > glyph_sx_max)) {
@@ -147,7 +147,7 @@ bool  cso::ref::reset(unsigned int format, int sx, int sy) noexcept
       return true;
 }
 
-bool  cso::ref::reset(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
+bool  cso::ref::reset(std::uint8_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
 {
       reset();
       if((sx < glyph_sx_min) || (sx > glyph_sx_max)) {
@@ -161,16 +161,13 @@ bool  cso::ref::reset(unsigned int format, int sx, int sy, std::uint8_t* data, s
       }
       if(data) {
           if(size <= static_cast<std::size_t>(std::numeric_limits<int>::max())) {
-              std::size_t l_size_min = get_data_size(format, sx, sy);
-              if(size >= l_size_min) {
-                  m_format = format;
-                  m_sx = sx;
-                  m_sy = sy;
-                  m_data = data;
-                  m_size = size;
-                  m_dynamic = false;
-                  return  true;
-              }
+              m_format = format;
+              m_sx = sx;
+              m_sy = sy;
+              m_data = data;
+              m_size = size;
+              m_dynamic = false;
+              return  true;
           }
       }
       return false;
@@ -303,7 +300,7 @@ cso::ptr&  cso::ptr::operator=(ptr&& rhs) noexcept
       return *this;
 }
 
-auto  cso::get_format() const noexcept -> unsigned int
+auto  cso::get_format() const noexcept -> std::uint8_t
 {
       if(m_ptr) {
           return m_ptr->get_format();
@@ -311,7 +308,7 @@ auto  cso::get_format() const noexcept -> unsigned int
       return fmt_undef;
 }
 
-bool  cso::has_format(unsigned int format) const noexcept
+bool  cso::has_format(std::uint8_t format) const noexcept
 {
       if(m_ptr) {
           return m_ptr->get_format() == format;
@@ -335,7 +332,7 @@ int   cso::get_glyph_sy() const noexcept
       return 0;
 }
 
-bool  cso::reset(unsigned int format, int sx, int sy) noexcept
+bool  cso::reset(std::uint8_t format, int sx, int sy) noexcept
 {
       if((sx > 0) &&
           (sy > 0)) {
@@ -347,7 +344,7 @@ bool  cso::reset(unsigned int format, int sx, int sy) noexcept
       }
 }
 
-bool  cso::reset(unsigned int format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
+bool  cso::reset(std::uint8_t format, int sx, int sy, std::uint8_t* data, std::size_t size) noexcept
 {
       if((sx > 0) &&
           (sy > 0) &&

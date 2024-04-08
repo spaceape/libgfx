@@ -20,16 +20,14 @@ include_directories(
 set(GFX_SDK_DIR ${HOST_SDK_DIR}/${NAME})
 
 set(inc
-  metrics.h ac.h dc.h driver.h
+  metrics.h ac.h dc.h
   tile.h raster.h vector.h
-  surface.h
-  device.h
 )
 
 # core source files, sources between all ports
 set(common_srcs
 
-  metrics.cpp ac.cpp dc.cpp driver.cpp
+  metrics.cpp ac.cpp dc.cpp
   
   tile.cpp tile/cmo.cpp tile/cso.cpp tile/cbo.cpp
   
@@ -37,9 +35,7 @@ set(common_srcs
   
   vector.cpp
   
-  driver/hmm.cpp driver/com.cpp
-
-  surface.cpp device.cpp
+  support/memory.cpp support/resource.cpp
 
   gfx.cpp
 )
@@ -55,13 +51,11 @@ if("${OS}" MATCHES "Linux")
   set(system_srcs
       support/gl/array_ptr.cpp support/gl/buffer_ptr.cpp support/gl/index_ptr.cpp
       support/gl/texture_ptr.cpp support/gl/shader_ptr.cpp support/gl/program_ptr.cpp
-      support/gl_render_base.cpp    
   )
   set(system_libs)
 endif()
 
 add_subdirectory(assets)
-add_subdirectory(driver)
 add_subdirectory(image)
 add_subdirectory(raster)
 add_subdirectory(tile)

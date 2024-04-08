@@ -20,18 +20,18 @@
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
 #include "ac.h"
-#include "driver/hmm.h"
+#include "support/memory.h"
 
 namespace gfx {
 
-      std::uint8_t*(*ac::gfx_cso_reserve)(int) noexcept = hmm::cso_reserve;
-      std::uint8_t*(*ac::gfx_cso_dispose)(std::uint8_t*, int) noexcept = hmm::cso_dispose;
-      std::uint8_t*(*ac::gfx_cmo_reserve)(int) noexcept = hmm::cmo_reserve;
-      std::uint8_t*(*ac::gfx_cmo_dispose)(std::uint8_t*, int) noexcept = hmm::cso_dispose;
-      std::uint8_t*(*ac::gfx_cbo_reserve)(int) noexcept = hmm::cbo_reserve;
-      std::uint8_t*(*ac::gfx_cbo_dispose)(std::uint8_t*, int) noexcept = hmm::cbo_dispose;
-      std::uint8_t*(*ac::gfx_pbo_reserve)(int) noexcept = hmm::pbo_reserve;
-      std::uint8_t*(*ac::gfx_pbo_dispose)(std::uint8_t*, int) noexcept = hmm::pbo_dispose;
+      std::uint8_t*(*ac::gfx_cso_reserve)(int) noexcept = memory::cso_reserve;
+      std::uint8_t*(*ac::gfx_cso_dispose)(std::uint8_t*, int) noexcept = memory::cso_dispose;
+      std::uint8_t*(*ac::gfx_cmo_reserve)(int) noexcept = memory::cmo_reserve;
+      std::uint8_t*(*ac::gfx_cmo_dispose)(std::uint8_t*, int) noexcept = memory::cso_dispose;
+      std::uint8_t*(*ac::gfx_cbo_reserve)(int) noexcept = memory::cbo_reserve;
+      std::uint8_t*(*ac::gfx_cbo_dispose)(std::uint8_t*, int) noexcept = memory::cbo_dispose;
+      std::uint8_t*(*ac::gfx_pbo_reserve)(int) noexcept = memory::pbo_reserve;
+      std::uint8_t*(*ac::gfx_pbo_dispose)(std::uint8_t*, int) noexcept = memory::pbo_dispose;
 
       ac::ac() noexcept
 {

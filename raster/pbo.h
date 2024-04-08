@@ -44,15 +44,27 @@ class pbo: public ac
     
     public:
             ref() noexcept;
-            ref(unsigned int, int, int) noexcept;
-            ref(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+            ref(std::uint16_t, int, int) noexcept;
+            ref(std::uint16_t, int, int, std::uint8_t*, std::size_t) noexcept;
             ref(const ref&) noexcept = delete;
             ref(ref&&) noexcept = delete;
             ~ref();
 
+    inline  std::uint16_t get_format() const noexcept {
+            return m_format;
+    }
+
+    inline  std::uint16_t get_sx() const noexcept {
+            return m_sx;
+    }
+
+    inline  std::uint16_t get_sy() const noexcept {
+            return m_sy;
+    }
+
             void    reset() noexcept;
-            bool    reset(unsigned int, int, int) noexcept;
-            bool    reset(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+            bool    reset(std::uint16_t, int, int) noexcept;
+            bool    reset(std::uint16_t, int, int, std::uint8_t*, std::size_t) noexcept;
 
             std::uint8_t* get_data() const noexcept;
             int           get_size() const noexcept;
@@ -74,6 +86,7 @@ class pbo: public ac
             ptr(const ptr&) noexcept;
             ptr(ptr&&) noexcept;
             ~ptr();
+
             ref*    get() const noexcept;
             ref*    clone() const noexcept;
             void    reset() noexcept;
@@ -93,11 +106,15 @@ class pbo: public ac
   ptr     m_ptr;
 
   public:
-  protected:
-  static  constexpr std::size_t get_data_size(unsigned int fmt, int sx, int sy) noexcept {
+  static  constexpr std::size_t  get_data_size(std::uint16_t fmt, int sx, int sy) noexcept {
           return get_line_size(fmt, sx) * sy;
   }
 
+  static  constexpr std::size_t  get_data_offset(std::uint16_t fmt, int sx, int sy, int ls) noexcept {
+          return get_line_size(fmt, ls) * sy + get_line_size(fmt, sx);
+  }
+
+  protected:
   template<typename... Args>
   static  ref*   make_ptr(Args&&... args) noexcept {
           return new(std::nothrow) ref(std::forward<Args>(args)...);
@@ -105,20 +122,24 @@ class pbo: public ac
 
   public:
           pbo() noexcept;
-          pbo(unsigned int, int, int) noexcept;
-          pbo(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+          pbo(std::uint16_t, int, int) noexcept;
+          pbo(std::uint16_t, int, int, std::uint8_t*, std::size_t) noexcept;
           pbo(const pbo&) noexcept;
           pbo(pbo&&) noexcept;
           ~pbo();
 
-          bool   reset() noexcept;
-          bool   reset(unsigned int, int, int) noexcept;
-          bool   reset(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+          auto   get_format() const noexcept -> std::uint16_t;
+          auto   get_sx() const noexcept -> std::uint16_t;
+          auto   get_sy() const noexcept -> std::uint16_t;
+
+          void   reset() noexcept;
+          bool   reset(std::uint16_t, int, int) noexcept;
+          bool   reset(std::uint16_t, int, int, std::uint8_t*, std::size_t) noexcept;
           void   dispose() noexcept;
           void   release() noexcept;
 
-          std::uint8_t* get_data_ptr() const noexcept;
-          int           get_data_size() const noexcept;
+          auto   get_data_ptr() const noexcept -> std::uint8_t*;
+          int    get_data_size() const noexcept;
   
           bool   is_defined() const noexcept;
           

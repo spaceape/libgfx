@@ -1,7 +1,7 @@
-#ifndef gfx_driver_h
-#define gfx_driver_h
+#ifndef gfx_support_memory_h
+#define gfx_support_memory_h
 /** 
-    Copyright (c) 2021, wicked systems
+    Copyright (c) 2024, wicked systems
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
@@ -21,25 +21,21 @@
     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-#include "gfx.h"
-#include "dc.h"
+#include <gfx.h>
+#include <gfx/dc.h>
 
 namespace gfx {
+namespace memory {
 
-class driver: public dc
-{
-  public:
-          driver() noexcept;
-          driver(const driver&) noexcept = delete;
-          driver(driver&&) noexcept = delete;
-  virtual ~driver();
+std::uint8_t* cso_reserve(int) noexcept;
+std::uint8_t* cso_dispose(std::uint8_t*, int) noexcept;
+std::uint8_t* cmo_reserve(int) noexcept;
+std::uint8_t* cmo_dispose(std::uint8_t*, int) noexcept;
+std::uint8_t* cbo_reserve(int) noexcept;
+std::uint8_t* cbo_dispose(std::uint8_t*, int) noexcept;
+std::uint8_t* pbo_reserve(int) noexcept;
+std::uint8_t* pbo_dispose(std::uint8_t*, int) noexcept;
 
-  virtual bool    acquire(device*) noexcept;
-  virtual bool    release(device*) noexcept;
-
-          driver& operator=(const driver&) noexcept = delete;
-          driver& operator=(driver&&) noexcept = delete;
-};
-
+/*namespace memory*/ }  
 /*namespace gfx*/ }
 #endif

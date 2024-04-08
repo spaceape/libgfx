@@ -37,122 +37,45 @@ namespace gfx {
 */
 struct dc: public ac
 {
-  /* mapping_base_t
-     surface mapping
-  */
-  struct mapping_base_t
-  {
-    surface*        surface_ptr;
-    std::uint16_t   format;
-    std::uint16_t   render_flags;       // blending mode described by surface::map_* flags
-    std::uint16_t   option_flags;
-    short int       px;
-    short int       py;
-    short int       sx;
-    short int       sy;
-    short int       dx;                 // horizontal offset at which the logical window is mapped onto the physical window
-    short int       dy;                 // vertical offset at which the logical window is mapped onto the physical window
-    short int       wsx;                // logical window horizontal size
-    short int       wsy;                // logical window vertical size
-    short int       gsx;                // tile horizontal size
-    short int       gsy;                // tile vertical size
-    short int       cc;                 // colour count
-    cmo             cm;
-    cso             cs[charset_count];  // tile set array
-    cbo             cb;
-    pbo             pb;
-    bool            wsa:1;              // window size is automatically adjusted to the size of the mapping (default == true)
-    bool            valid_bit:1;
-    bool            ready_bit:1;
-  };
-
-  /* sp_base_t
-     surface partition
-  */
-  struct sp_base_t
-  {
-  };
-
-  private:
-  /* de
-     device environment: backup struct for device context switches
-  */
-  struct de
-  {
-      device* device_ptr;
-
-      std::uint8_t*(*cso_reserve)(int) noexcept;
-      std::uint8_t*(*cso_dispose)(std::uint8_t*, int) noexcept;
-      std::uint8_t*(*cmo_reserve)(int) noexcept;
-      std::uint8_t*(*cmo_dispose)(std::uint8_t*, int) noexcept;
-      std::uint8_t*(*cbo_reserve)(int) noexcept;
-      std::uint8_t*(*cbo_dispose)(std::uint8_t*, int) noexcept;
-      std::uint8_t*(*pbo_reserve)(int) noexcept;
-      std::uint8_t*(*pbo_dispose)(std::uint8_t*, int) noexcept;
-
-      bool(*cmo_load_preset)(cmo&, int, unsigned int, int) noexcept;
-      bool(*cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept;
-      bool(*cso_load_ptr)(cso&, std::uint8_t*, unsigned int, int, int) noexcept;
-      bool(*cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept;
-      bool(*pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept;
-  };
-
-  /* se
-     surface environment: backup struct for surface context switches
-  */
-  struct se
-  {
-      surface*        surface_ptr;
-      mapping_base_t* mapping_ptr;
-  };
-
   protected:
-  static  bool(*gfx_cmo_load_preset)(cmo&, int, unsigned int, int) noexcept;
-  static  bool(*gfx_cmo_load_resource)(cmo&, const char*, unsigned int, int) noexcept;
-  static  bool(*gfx_cso_load_ptr)(cso&, std::uint8_t*, unsigned int, int, int) noexcept;
-  static  bool(*gfx_cso_load_resource)(cso&, const char*, unsigned int, int, int) noexcept;
-  static  bool(*gfx_pbo_load_resource)(pbo&, const char*, unsigned int, int, int) noexcept;
 
-  protected:
-  static  bool      gfx_set_format(unsigned int, int, int, int) noexcept;
-  static  void      gfx_set_option_flags(unsigned int) noexcept;
-  static  void      gfx_set_render_flags(unsigned int) noexcept;
-  static  bool      gfx_set_window_size(int, int) noexcept;
+          void  (*gfx_push)(ctx_t&, const pbo&) noexcept;
 
-  static  bool      gfx_get_cmo(cmo&) noexcept;
-  static  bool      gfx_set_cmo(const cmo&) noexcept;
-  static  bool      gfx_get_cso(int, cso&) noexcept;
-  static  bool      gfx_set_cso(int, const cso&) noexcept;
+          void  (*gfx_map)(int, int, int, int) noexcept;
+          int   (*gfx_get_surface_sx)() noexcept;
+          int   (*gfx_get_surface_sy)() noexcept;
+          int   (*gfx_get_cursor_px)() noexcept;
+          void  (*gfx_set_cursor_px)(int) noexcept;
+          void  (*gfx_set_cursor_dx)(int) noexcept;
+          int   (*gfx_get_cursor_py)() noexcept;
+          void  (*gfx_set_cursor_py)(int) noexcept;
+          void  (*gfx_set_cursor_dy)(int) noexcept;
+          auto  (*gfx_get_cursor_ptr)() noexcept -> std::uint8_t*;
+          auto  (*gfx_get_offset_ptr)(int, int) noexcept -> std::uint8_t*;
 
-  static  uint8_t*  gfx_get_lb_ptr() noexcept;
-  static  uint8_t*  gfx_get_lb_ptr(int, int = 0) noexcept;
-  static  uint8_t*  gfx_get_hb_ptr() noexcept;
-  static  uint8_t*  gfx_get_hb_ptr(int, int = 0) noexcept;
-  static  uint8_t*  gfx_get_bg_ptr() noexcept;
-  static  uint8_t*  gfx_get_bg_ptr(int, int = 0) noexcept;
-  static  uint8_t*  gfx_get_fg_ptr() noexcept;
-  static  uint8_t*  gfx_get_fg_ptr(int, int = 0) noexcept;
+          void  (*gfx_set_cso)(const cso&) noexcept;
+          void  (*gfx_set_cso_base)(const cso&, int) noexcept;
+          void  (*gfx_set_cmo)(const cmo&) noexcept;
+          auto  (*gfx_get_background_colour)() noexcept -> std::uint32_t;
+          void  (*gfx_set_background_colour)(std::uint32_t) noexcept;
+          auto  (*gfx_get_foreground_colour)() noexcept -> std::uint32_t;
+          void  (*gfx_set_foreground_colour)(std::uint32_t) noexcept;
+          void  (*gfx_draw_tile_b)(int) noexcept;
+          void  (*gfx_blt_surface)() noexcept;
 
-  static  void      gfx_scroll_rel(int, int) noexcept;
-  static  void      gfx_scroll_abs(int, int) noexcept;
+          void  (*gfx_set_device_blit_proc)(pbo_blit_t) noexcept;
+          void  (*gfx_set_device_fill_proc)(pbo_fill_t) noexcept;
 
-  static  void      gfx_push_device(de&, device*) noexcept;
-  static  void      gfx_push_surface(se&, surface*, mapping_base_t* = nullptr) noexcept;
-  static  auto      gfx_get_device() noexcept -> device*;
-  static  void      gfx_pop_surface(se&) noexcept;
-  static  void      gfx_pop_device(de&) noexcept;
-
-  friend class  device;
-  friend class  driver;
+          void  (*gfx_pop)(ctx_t&) noexcept;
 
   public:
           dc() noexcept;
           dc(const dc&) noexcept = delete;
           dc(dc&&) noexcept = delete;
           ~dc();
-          dc&  swap(dc&) = delete;
-          dc& operator=(const dc& rhs) noexcept = delete;
-          dc& operator=(dc&& rhs) noexcept = delete;
+          dc&   swap(dc&) = delete;
+          dc&   operator=(const dc& rhs) noexcept = delete;
+          dc&   operator=(dc&& rhs) noexcept = delete;
 };
 
 /*namespace gfx*/ }

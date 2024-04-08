@@ -48,19 +48,19 @@ class cso: public ac
     
     public:
             ref() noexcept;
-            ref(unsigned int, int, int) noexcept;
-            ref(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+            ref(std::uint8_t, int, int) noexcept;
+            ref(std::uint8_t, int, int, std::uint8_t*, std::size_t) noexcept;
             ref(const ref&) noexcept = delete;
             ref(ref&&) noexcept = delete;
             ~ref();
 
-            unsigned int get_format() const noexcept;
+            std::uint8_t get_format() const noexcept;
             int     get_glyph_sx() const noexcept;
             int     get_glyph_sy() const noexcept;
 
             void    reset() noexcept;
-            bool    reset(unsigned int, int, int) noexcept;
-            bool    reset(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+            bool    reset(std::uint8_t, int, int) noexcept;
+            bool    reset(std::uint8_t, int, int, std::uint8_t*, std::size_t) noexcept;
 
             std::uint8_t* get_data() const noexcept;
             int           get_size() const noexcept;
@@ -101,17 +101,11 @@ class cso: public ac
   ptr     m_ptr;
 
   public:
-  static  constexpr  unsigned int  fmt_1bpp = 1;
-  static  constexpr  unsigned int  fmt_8bpp = 8;
-
-  protected:
-  template<typename... Args>
-  static  ref*   make_ptr(Args&&... args) noexcept {
-          return new(std::nothrow) ref(std::forward<Args>(args)...);
-  }
+  static  constexpr std::uint8_t fmt_1bpp = 1;
+  static  constexpr std::uint8_t fmt_8bpp = 8;
 
   public:
-  static constexpr std::size_t get_line_size(unsigned int format, std::uint16_t sx) noexcept {
+  static  constexpr std::size_t  get_line_size(std::uint8_t format, std::uint16_t sx) noexcept {
           if(sx & 7) {
               sx &= ~7;
               sx += 8;
@@ -125,30 +119,39 @@ class cso: public ac
           return 0;
   }
 
-  static constexpr std::size_t get_glyph_size(unsigned int format, std::uint16_t sx, std::uint16_t sy) noexcept {
-          return get_line_size(format, sx) * sy;
+  static  constexpr std::size_t  get_glyph_size(std::uint8_t format, std::uint16_t sx, std::uint16_t sy) noexcept {
+          return  get_line_size(format, sx) * sy;
   }
 
-  static  constexpr std::size_t get_data_size(unsigned int format, int sx, int sy) noexcept {
-          return get_glyph_size(format, sx, sy) * charset_size;
+  static  constexpr std::size_t  get_data_size(std::uint8_t format, int sx, int sy) noexcept {
+          return  get_glyph_size(format, sx, sy) * charset_size;
   }
 
+  static  constexpr std::size_t  get_data_offset(std::uint8_t format, int sx, int sy, int index) noexcept {
+          return  get_glyph_size(format, sx, sy) * index;
+  }
+
+  protected:
+  template<typename... Args>
+  static  ref*   make_ptr(Args&&... args) noexcept {
+          return new(std::nothrow) ref(std::forward<Args>(args)...);
+  }
 
   public:
           cso() noexcept;
-          cso(unsigned int, int, int) noexcept;
-          cso(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+          cso(std::uint8_t, int, int) noexcept;
+          cso(std::uint8_t, int, int, std::uint8_t*, std::size_t) noexcept;
           cso(const cso&) noexcept;
           cso(cso&&) noexcept;
           ~cso();
 
-          auto   get_format() const noexcept -> unsigned int;
-          bool   has_format(unsigned int) const noexcept;
+          auto   get_format() const noexcept -> std::uint8_t;
+          bool   has_format(std::uint8_t) const noexcept;
           int    get_glyph_sx() const noexcept;
           int    get_glyph_sy() const noexcept;
           
-          bool   reset(unsigned int, int, int) noexcept;
-          bool   reset(unsigned int, int, int, std::uint8_t*, std::size_t) noexcept;
+          bool   reset(std::uint8_t, int, int) noexcept;
+          bool   reset(std::uint8_t, int, int, std::uint8_t*, std::size_t) noexcept;
           void   dispose() noexcept;
           void   release() noexcept;
 
@@ -158,7 +161,7 @@ class cso: public ac
 
   inline  std::uint8_t* get_glyph_ptr(int glyph_index, int line_index = 0) const noexcept {
 
-          unsigned int l_format = m_ptr->get_format();
+          std::uint8_t l_format = m_ptr->get_format();
           int l_sx = m_ptr->get_glyph_sx();
           int l_sy = m_ptr->get_glyph_sy();
           return m_ptr->get_data() + (glyph_index * get_glyph_size(l_format, l_sx, l_sy)) + (line_index * get_line_size(l_format, l_sx));

@@ -59,9 +59,9 @@ constexpr std::uint16_t mode_tile = 0x000c;
 /* tile size limits
 */
 constexpr int glyph_sx_min = 8;
-constexpr int glyph_sx_max = 32;
+constexpr int glyph_sx_max = 64;
 constexpr int glyph_sy_min = 8;
-constexpr int glyph_sy_max = 32;
+constexpr int glyph_sy_max = 64;
 
 /* number of tile sets surfaces are allowed to own;
    the absolute maximum limit of this value is dictated by the number of 'C' bits in the tile format flags just above

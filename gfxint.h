@@ -1,5 +1,7 @@
+#ifndef gfx_int_h
+#define gfx_int_h
 /** 
-    Copyright (c) 2022, wicked systems
+    Copyright (c) 2024, wicked systems
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
@@ -19,43 +21,49 @@
     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-#include "sw_render_base.h"
+#include "gfx.h"
+#include "metrics.h"
+#include "ac.h"
+#include "tile.h"
+#include "tile/cmo.h"
+#include "tile/cso.h"
+#include "tile/cbo.h"
+#include "raster/pbo.h"
 
 namespace gfx {
 
-      sw_render_base::sw_render_base() noexcept:
-      device(),
-      m_display_sx(0),
-      m_display_sy(0),
-      m_ready_bit(false)
-{
-}
+/* internal context
+   unmanaged device context which exposes internal rendering functions
+   gcs_*() - global software rendering context
+*/
+void  gcs_push(ctx_t&, const pbo&) noexcept;
+void  gcs_map(int, int, int, int) noexcept;
 
-      sw_render_base::~sw_render_base()
-{
-}
+int   gcs_get_surface_sx() noexcept;
+int   gcs_get_surface_sy() noexcept;
+int   gcs_get_cursor_px() noexcept;
+void  gcs_set_cursor_px(int) noexcept;
+void  gcs_set_cursor_dx(int) noexcept;
+int   gcs_get_cursor_py() noexcept;
+void  gcs_set_cursor_py(int) noexcept;
+void  gcs_set_cursor_dy(int) noexcept;
+auto  gcs_get_cursor_ptr() noexcept -> std::uint8_t*;
+auto  gcs_get_offset_ptr(int, int) noexcept -> std::uint8_t*;
 
-bool  sw_render_base::gdd_reset_rendering_context() noexcept
-{
-      return true;
-}
+void  gcs_set_cso(const cso&) noexcept;
+void  gcs_set_cso(const cso&, int) noexcept;
+void  gcs_set_cmo(const cmo&) noexcept;
+auto  gcs_get_background_colour() noexcept -> std::uint32_t;
+void  gcs_set_background_colour(std::uint32_t) noexcept;
+auto  gcs_get_foreground_colour() noexcept -> std::uint32_t;
+void  gcs_set_foreground_colour(std::uint32_t) noexcept;
+void  gcs_draw_tile_b(int) noexcept;
+void  gcs_blt_surface() noexcept;
 
-void  sw_render_base::gdd_render(surface* surface_ptr, mapping_base_t* mapping_base_ptr) noexcept
-{
-}
+void  gcs_set_device_blit_proc(pbo_blit_t) noexcept;
+void  gcs_set_device_fill_proc(pbo_fill_t) noexcept;
 
-void  sw_render_base::gdd_unset_rendering_context() noexcept
-{
-}
-
-int   sw_render_base::get_display_sx() const noexcept
-{
-      return m_display_sx;
-}
-
-int   sw_render_base::get_display_sy() const noexcept
-{
-      return m_display_sy;
-}
+void  gcs_pop(ctx_t&) noexcept;
 
 /*namespace gfx*/ }
+#endif

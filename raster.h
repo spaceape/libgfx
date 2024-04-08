@@ -53,7 +53,7 @@ constexpr std::uint16_t mode_raster = mode_indexed | mode_colour;
 /* get_pixel_size()
  * get the size of a set of `count` pixels
 */
-constexpr std::size_t  get_pixel_size(unsigned int fmt, int count = 1) noexcept {
+constexpr std::size_t  get_pixel_size(std::uint16_t fmt, int count = 1) noexcept {
       int l_bpp = 0;
       if(fmt & mode_colour) {
           l_bpp = (count << (fmt & 0x02)) >> (fmt & 0x01);

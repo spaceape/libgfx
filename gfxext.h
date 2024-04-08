@@ -1,5 +1,7 @@
+#ifndef gfx_ext_h
+#define gfx_ext_h
 /** 
-    Copyright (c) 2022, wicked systems
+    Copyright (c) 2024, wicked systems
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
@@ -19,26 +21,8 @@
     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
-#include "driver.h"
+#include "gfx.h"
 
 namespace gfx {
-
-      driver::driver() noexcept
-{
-}
-
-      driver::~driver()
-{
-}
-
-bool  driver::acquire(device*) noexcept
-{
-      return true;
-}
-
-bool  driver::release(device*) noexcept
-{
-      return true;
-}
-
 /*namespace gfx*/ }
+#endif
