@@ -1,4 +1,4 @@
-#gfx::assets
+# gfx::assets
 
 set(NAME assets)
 
