@@ -1,4 +1,4 @@
-/** 
+/**
     Copyright (c) 2024, wicked systems
     All rights reserved.
 
@@ -6,16 +6,16 @@
     conditions are met:
     * Redistributions of source code must retain the above copyright notice, this list of conditions and the following
       disclaimer.
-    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following 
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
       disclaimer in the documentation and/or other materials provided with the distribution.
     * Neither the name of wicked systems nor the names of its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
 
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 **/
@@ -111,7 +111,7 @@ static void  cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, 
 //               std::uint8_t l_r_value;
 //               std::uint8_t l_g_value;
 //               std::uint8_t l_b_value;
-//               // run throug a loop from 0..3 and 
+//               // run throug a loop from 0..3 and
 //               for(int i_cs = 0; i_cs < 4; i_cs++) {
 //                   if(i_cs == 0) {
 //                   }
@@ -123,7 +123,7 @@ static void  cmo_get_colour_bits(unsigned int format, int& a_bits, int& r_bits, 
 //               // std::uint8_t l_b_value;
 //               // int l_colour_index = 0;
 //               // int l_colour_base  = offset;
-//               // for(l_colour_index = 0; l_colour_index = 
+//               // for(l_colour_index = 0; l_colour_index =
 //           }
 //       // }
 //       return 0;
@@ -224,7 +224,7 @@ bool  cso_load_resource(cso& cso, const char* file_name, unsigned int format, in
 */
 bool  pbo_load_resource(pbo& pbo, const char* file_name, unsigned int format, int sx, int sy) noexcept
 {
-#ifdef UNIX
+#ifdef LINUX
       if(bool
           l_reset_success = pbo.reset(format, sx, sy);
           l_reset_success == true) {

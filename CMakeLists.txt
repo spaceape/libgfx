@@ -28,13 +28,13 @@ set(inc
 set(common_srcs
 
   metrics.cpp ac.cpp dc.cpp
-  
+
   tile.cpp tile/cmo.cpp tile/cso.cpp tile/cbo.cpp
-  
+
   raster.cpp raster/pbo.cpp
-  
+
   vector.cpp
-  
+
   support/memory.cpp support/resource.cpp
 
   gfx.cpp
@@ -42,7 +42,7 @@ set(common_srcs
 
 set(common_libs host ${HOST_LIBS})
 
-message("GFX SYSTEM NAME: \"${OS}\"")
+message("GFX SYSTEM NAME: \"${GPU}\"")
 
 # system specific sources and libraries
 set(system_srcs)
